@@ -134,26 +134,27 @@ var DOW=[{k:'mon',l:'Mon'},{k:'tue',l:'Tue'},{k:'wed',l:'Wed'},{k:'thu',l:'Thu'}
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-var S;
-try{
-var rg_locs='[]',rg_sel='[]',rg_apikey='',rg_binid='';
-try{rg_locs=localStorage.getItem('rg_locs')||'[]';}catch(e){}
-try{rg_sel=localStorage.getItem('rg_sel')||'[]';}catch(e){}
-try{rg_apikey=localStorage.getItem('rg_apikey')||'';}catch(e){}
-try{rg_binid=localStorage.getItem('rg_binid')||'';}catch(e){}
-S={
-locs:JSON.parse(rg_locs),
-selArr:JSON.parse(rg_sel),
-tab:'today',filter:'',mfilter:'',startAddr:'',showTip:false,editId:null,
-apiKey:rg_apikey,
-binId:rg_binid,
-syncing:false,syncMsg:'',syncErr:false,
-toastMsg:'',toastOk:true,toastShow:false,toastTmr:null,
-akIn:'',biIn:''
+var S={
+locs:[],
+selArr:[],
+tab:'today',
+filter:'',
+mfilter:'',
+startAddr:'',
+showTip:false,
+editId:null,
+apiKey:'',
+binId:'',
+syncing:false,
+syncMsg:'',
+syncErr:false,
+toastMsg:'',
+toastOk:true,
+toastShow:false,
+toastTmr:null,
+akIn:'',
+biIn:''
 };
-}catch(err){
-S={locs:[],selArr:[],tab:'today',filter:'',mfilter:'',startAddr:'',showTip:false,editId:null,apiKey:'',binId:'',syncing:false,syncMsg:'',syncErr:false,toastMsg:'',toastOk:true,toastShow:false,toastTmr:null,akIn:'',biIn:''};
-}
 var SEL=new Set(S.selArr);
 var NF=blank();
 var EF=blank();
