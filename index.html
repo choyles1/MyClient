@@ -65,12 +65,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;ba
 </div>
 
 <div class="tabs">
-<button class="tab active" onclick="switchTab('today')">Today's Route</button>
+<button class="tab active" onclick="switchTab('today')">Build Route</button>
 <button class="tab" onclick="switchTab('manage')">Manage Clients</button>
 <button class="tab" onclick="switchTab('config')">Settings</button>
 </div>
 
 <div class="container active" id="todayTab">
+<div style="text-align:center;margin-bottom:10px;color:#666;font-size:14px;">Select a day to highlight scheduled clients, or choose any client for your route</div>
 <div class="days-grid" style="margin-bottom:15px;">
 <div class="day-btn active" data-day="Sun" onclick="selectViewDay(this)">Sun</div>
 <div class="day-btn" data-day="Mon" onclick="selectViewDay(this)">Mon</div>
@@ -520,17 +521,29 @@ function getTodayClients() {
 }
 
 function renderToday() {
-    var todayClients = getTodayClients();
     var html = '';
     
-    if (todayClients.length === 0) {
-        html = '<div class="empty">No clients scheduled for ' + viewDay + '</div>';
+    if (clients.length === 0) {
+        html = '<div class="empty">No clients yet. Add clients in the Manage Clients tab.</div>';
     } else {
-        todayClients.forEach(function(c) {
+        clients.forEach(function(c) {
             var selected = selectedClients.indexOf(c.id) !== -1;
+            var isScheduledToday = c.days && c.days.indexOf(viewDay) !== -1;
+            
             html += '<div class="client-item' + (selected ? ' selected' : '') + '" onclick="toggleSelect(' + c.id + ')">';
-            html += '<div class="client-name">' + esc(c.name) + '</div>';
-            html += '<div class="client-info">📍 ' + esc(c.address) + '</div>';
+            html += '<div class="client-name">' + esc(c.name);
+            
+            if (isScheduledToday) {
+                html += ' <span style="color:#10b981;font-size:14px;">✓ Scheduled</span>';
+            } else if (c.days && c.days.length > 0) {
+                html += ' <span style="color:#6b7280;font-size:12px;">(Usually: ' + c.days.join(', ') + ')</span>';
+            }
+            
+            html += '</div>';
+            html += '<div class="client-info">📍 ' + esc(c.street || '') + '</div>';
+            if (c.city && c.zip) {
+                html += '<div class="client-info">' + esc(c.city) + ', ' + esc(c.zip) + '</div>';
+            }
             
             if (c.phones && c.phones.length > 0) {
                 html += '<div class="client-info">';
