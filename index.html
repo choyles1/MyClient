@@ -6,507 +6,588 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>My Clients</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="My Clients">
 <link rel="apple-touch-icon" href="MyClients.png">
 <style>
-:root{--bg:#fff;--surface:#f4f6fb;--surface2:#e8ecf5;--border:#a8b4cc;--accent:#e8590c;--accent2:#f97316;--text:#0f1220;--muted:#3d4966;--green:#16a34a;--red:#dc2626;--gold:#d97706;--radius:12px;}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:80px;}
-input,select,button{font-family:Arial,sans-serif;}
-.header{padding:18px 20px 12px;border-bottom:2px solid #c0c8dc;position:sticky;top:0;background:#fff;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.1);}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;}
-.app-title{font-size:22px;font-weight:800;letter-spacing:-.5px;}
-.app-title span{color:var(--accent);}
-.hright{display:flex;align-items:center;gap:6px;}
-.date-badge{font-size:11px;color:var(--muted);background:var(--surface);padding:4px 10px;border-radius:20px;border:1px solid var(--border);}
-.sync-btn,.reset-btn{background:#1a2040;border:none;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;}
-.reset-btn{padding:5px 9px;font-size:13px;}
-.sync-st{font-size:10px;color:var(--muted);margin-top:2px;}
-.sync-st.err{color:var(--red);}
-.tabs{display:flex;gap:6px;padding:12px 20px;border-bottom:2px solid #c0c8dc;background:#fff;}
-.tab{flex:1;padding:10px 8px;border-radius:8px;border:none;background:#1a2040;color:#fff;font-size:13px;font-weight:800;cursor:pointer;}
-.tab.active{background:#e8590c;}
-.panel{padding:14px 20px;}
-.setup-box{background:#fff8f0;border:1px solid #fbbf99;border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;}
-.setup-box-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px;}
-.setup-box-sub{font-size:12px;color:#92400e;line-height:1.5;margin-bottom:10px;}
-.setup-row{display:flex;gap:8px;margin-bottom:8px;}
-.setup-in{flex:1;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);outline:none;}
-.setup-btn{padding:8px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
-.route-sum{background:#f0f4ff;border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;border:2px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.sum-label{font-size:12px;color:var(--muted);margin-bottom:2px;}
-.sum-count{font-size:24px;font-weight:800;color:var(--accent);}
-.sum-count span{font-size:14px;color:var(--muted);font-weight:400;}
-.sum-right{text-align:right;}
-.sum-right-lbl{font-size:12px;color:var(--muted);margin-bottom:2px;}
-.sum-right-val{font-size:13px;color:var(--accent);font-weight:700;}
-.fld-lbl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
-.txt-in,.srch-in,.frm-in{width:100%;background:#fff;border:2px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;outline:none;}
-.srch-in{margin-bottom:10px;}
-.sel-acts{display:flex;gap:6px;margin-bottom:10px;}
-.sel-btn{flex:1;padding:8px 4px;background:#1a2040;border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
-.stop-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
-.stop-card{background:#fff;border:2px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-.stop-card.sel{border-color:var(--accent);background:rgba(232,89,12,.05);box-shadow:0 0 0 2px var(--accent);}
-.stop-card.pri{border-left-color:var(--gold);}
-.chk{width:24px;height:24px;border-radius:50%;border:2.5px solid #7080a0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:900;margin-top:1px;}
-.stop-card.sel .chk{background:var(--accent);border-color:var(--accent);color:#fff;}
-.sbody{flex:1;min-width:0;}
-.nm-row{display:flex;align-items:center;gap:5px;margin-bottom:2px;}
-.snm{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sadr{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
-.scnt{font-size:11px;color:var(--muted);margin-bottom:2px;}
-.snts{font-size:11px;color:var(--accent);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
-.smeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.svis{font-size:10px;color:var(--muted);}
-.sacts{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
-.cbts{display:flex;gap:4px;}
-.ibt{font-size:18px;background:none;border:none;cursor:pointer;padding:2px;line-height:1;text-decoration:none;display:inline-block;}
-.tag{font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid;flex-shrink:0;}
-.tf{color:#1d6fb8;border-color:#bdd6f0;background:#e8f2fb;}
-.tc{color:#6d3bbf;border-color:#d4bbf5;background:#f0e8fd;}
-.to{color:#166534;border-color:#a7d9b8;background:#dcfce7;}
-.tx{color:#c2410c;border-color:#fbbf99;background:#fff0e6;}
-.dtag{font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid;flex-shrink:0;font-weight:700;}
-.dmon{color:#0369a1;border-color:#7dd3fc;background:#e0f2fe;}
-.dtue{color:#7c3aed;border-color:#c4b5fd;background:#f3f0ff;}
-.dwed{color:#065f46;border-color:#6ee7b7;background:#d1fae5;}
-.dthu{color:#b45309;border-color:#fcd34d;background:#fef9c3;}
-.dfri{color:#be185d;border-color:#f9a8d4;background:#fce7f3;}
-.dsat{color:#0f766e;border-color:#5eead4;background:#f0fdfa;}
-.fab{position:fixed;bottom:24px;right:20px;z-index:150;display:flex;align-items:center;gap:8px;padding:16px 22px;background:#b84000;color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 6px 24px rgba(140,50,0,.55);}
-.fab.hidden{transform:translateY(100px);opacity:0;pointer-events:none;}
-.fab-badge{background:#fff;color:#b84000;border-radius:50%;width:20px;height:20px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}
-.opt-tip{display:flex;align-items:flex-start;gap:10px;background:#fffbeb;border:1px solid #fcd34d;border-radius:var(--radius);padding:12px 14px;margin-top:10px;}
-.opt-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:2px;}
-.opt-sub{font-size:12px;color:#92400e;line-height:1.4;}
-.opt-x{background:none;border:none;color:#92400e;font-size:20px;cursor:pointer;padding:0 2px;line-height:1;margin-left:auto;opacity:.6;}
-.empty{text-align:center;padding:40px 20px;color:var(--muted);}
-.empty-ico{font-size:36px;margin-bottom:12px;}
-.empty-ttl{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
-.empty-sub{font-size:13px;line-height:1.5;}
-.sec-lbl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-.divider{display:flex;align-items:center;gap:10px;margin:8px 0 14px;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
-.add-form{background:#fff;border:2px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.08);}
-.frm-row{margin-bottom:10px;}
-.frm-lbl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;display:block;}
-.frm-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-.pri-tog{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#fff;border:2px solid var(--border);border-radius:8px;cursor:pointer;margin-bottom:10px;}
-.pri-tog.on{background:#fef3c7;border-color:#fcd34d;}
-.pri-lbl{font-size:13px;font-weight:600;color:var(--muted);}
-.pri-tog.on .pri-lbl{color:var(--gold);}
-.add-btn{width:100%;padding:16px;background:#e8590c;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:800;cursor:pointer;}
-.saved-list{display:flex;flex-direction:column;gap:8px;}
-.saved-card{background:#fff;border:2px solid var(--border);border-radius:var(--radius);padding:13px 14px;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-.saved-card.pc{border-left-color:var(--gold);}
-.sc-top{display:flex;align-items:flex-start;gap:10px;}
-.sc-num{font-size:11px;color:var(--muted);min-width:20px;margin-top:2px;flex-shrink:0;}
-.sc-info{flex:1;min-width:0;}
-.sc-nmrow{display:flex;align-items:center;gap:6px;margin-bottom:2px;}
-.sc-nm{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sc-adr{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
-.sc-cnt{font-size:11px;color:var(--muted);margin-bottom:2px;}
-.sc-nts{font-size:11px;color:var(--accent);font-style:italic;margin-bottom:2px;}
-.sc-btns{display:flex;gap:5px;align-items:center;flex-shrink:0;}
-.edit-btn{background:#1a2040;border:none;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;}
-.del-btn{background:none;border:none;color:#8090b0;cursor:pointer;font-size:20px;padding:2px 4px;line-height:1;font-weight:900;}
-.sc-foot{display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
-.vstat{font-size:10px;color:var(--muted);}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
-.modal-bg.hide{display:none;}
-.modal{background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 40px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
-.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;}
-.modal-title{font-size:17px;font-weight:800;margin-bottom:16px;}
-.modal-foot{display:flex;gap:8px;margin-top:16px;}
-.modal-save{flex:1;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;}
-.modal-cancel{padding:13px 18px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;transition:transform .3s;z-index:999;white-space:nowrap;color:#fff;pointer-events:none;}
-.toast.show{transform:translateX(-50%) translateY(0);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f4f6fb;padding:10px;padding-bottom:80px;}
+.header{background:linear-gradient(135deg,#e8590c 0%,#b84000 100%);color:#fff;padding:15px;border-radius:8px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.title{font-size:24px;font-weight:700;}
+.title span{color:#ffd700;}
+.sync-btn{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:8px 12px;border-radius:4px;font-size:14px;cursor:pointer;}
+.sync-btn:active{background:rgba(255,255,255,0.3);}
+.tabs{display:flex;gap:5px;margin-bottom:10px;}
+.tab{flex:1;padding:12px;background:#fff;border:none;border-radius:6px;font-size:15px;font-weight:600;color:#666;cursor:pointer;}
+.tab.active{background:#e8590c;color:#fff;}
+.container{background:#fff;border-radius:8px;padding:15px;margin-bottom:10px;display:none;}
+.container.active{display:block;}
+.form-group{margin-bottom:12px;}
+.form-label{display:block;font-size:14px;font-weight:600;color:#333;margin-bottom:5px;}
+.input{width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:16px;}
+.phone-group{display:flex;gap:5px;margin-bottom:8px;align-items:center;}
+.phone-group input{flex:1;}
+.phone-group button{background:#dc2626;color:#fff;border:none;padding:10px;border-radius:4px;cursor:pointer;font-size:12px;}
+.add-phone{background:#10b981;color:#fff;border:none;padding:8px 12px;border-radius:4px;font-size:14px;cursor:pointer;margin-bottom:10px;}
+.days-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.day-btn{padding:10px;background:#f0f0f0;border:1px solid #ddd;border-radius:4px;text-align:center;font-size:14px;cursor:pointer;}
+.day-btn.selected{background:#e8590c;color:#fff;border-color:#e8590c;}
+.day-btn.active{background:#e8590c;color:#fff;border-color:#e8590c;font-weight:bold;}
+.btn{background:#e8590c;color:#fff;border:none;padding:12px 20px;border-radius:6px;font-size:16px;font-weight:600;cursor:pointer;width:100%;margin-top:10px;}
+.btn:active{background:#b84000;}
+.btn-secondary{background:#6b7280;}
+.btn-secondary:active{background:#4b5563;}
+.client-item{background:#f8f9fa;border:1px solid #e0e0e0;border-radius:6px;padding:12px;margin-bottom:10px;position:relative;}
+.client-item.selected{border-color:#e8590c;border-width:2px;background:#fef3e7;}
+.client-name{font-size:18px;font-weight:600;color:#333;margin-bottom:5px;}
+.client-info{font-size:14px;color:#666;margin-bottom:4px;}
+.client-days{font-size:12px;color:#e8590c;font-weight:600;margin-top:8px;}
+.phone-link{color:#e8590c;text-decoration:none;margin-right:10px;}
+.client-actions{display:flex;gap:5px;margin-top:10px;}
+.client-actions button{flex:1;padding:8px;border:none;border-radius:4px;font-size:14px;cursor:pointer;}
+.edit-btn{background:#3b82f6;color:#fff;}
+.delete-btn{background:#dc2626;color:#fff;}
+.select-btn{background:#10b981;color:#fff;}
+.empty{text-align:center;padding:40px 20px;color:#999;}
+.fab{position:fixed;bottom:20px;right:20px;width:60px;height:60px;background:#e8590c;color:#fff;border:none;border-radius:50%;font-size:24px;box-shadow:0 4px 12px rgba(0,0,0,0.3);cursor:pointer;display:none;}
+.fab.show{display:block;}
+.sync-status{font-size:12px;color:#ffd700;margin-top:5px;}
+.config-item{margin-bottom:15px;}
 </style>
 </head>
 <body>
-<div id="root"></div>
+
+<div class="header">
+<div>
+<div class="title">My <span>Clients</span></div>
+<div class="sync-status" id="syncStatus">Not connected</div>
+</div>
+<button class="sync-btn" onclick="syncNow()">↻ Sync</button>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="switchTab('today')">Today's Route</button>
+<button class="tab" onclick="switchTab('manage')">Manage Clients</button>
+<button class="tab" onclick="switchTab('config')">Settings</button>
+</div>
+
+<div class="container active" id="todayTab">
+<div class="days-grid" style="margin-bottom:15px;">
+<div class="day-btn active" data-day="Sun" onclick="selectViewDay(this)">Sun</div>
+<div class="day-btn" data-day="Mon" onclick="selectViewDay(this)">Mon</div>
+<div class="day-btn" data-day="Tue" onclick="selectViewDay(this)">Tue</div>
+<div class="day-btn" data-day="Wed" onclick="selectViewDay(this)">Wed</div>
+<div class="day-btn" data-day="Thu" onclick="selectViewDay(this)">Thu</div>
+<div class="day-btn" data-day="Fri" onclick="selectViewDay(this)">Fri</div>
+<div class="day-btn" data-day="Sat" onclick="selectViewDay(this)">Sat</div>
+</div>
+<div id="todayList"></div>
+</div>
+
+<div class="container" id="manageTab">
+<div id="clientList"></div>
+<button class="btn" onclick="showAddForm()">+ Add New Client</button>
+</div>
+
+<div class="container" id="configTab">
+<div class="config-item">
+<div class="form-label">JSONBin API Key</div>
+<input type="text" class="input" id="apiKey" placeholder="Enter your JSONBin API key">
+</div>
+<div class="config-item">
+<div class="form-label">Bin ID (optional - leave blank for new bin)</div>
+<input type="text" class="input" id="binId" placeholder="Leave blank to create new bin">
+</div>
+<button class="btn" onclick="saveConfig()">Save & Sync</button>
+<button class="btn btn-secondary" onclick="resetConfig()">Clear Credentials</button>
+</div>
+
+<div class="container" id="editFormTab" style="display:none;">
+<h3 id="formTitle" style="margin-bottom:15px;color:#333;">Add New Client</h3>
+
+<div class="form-group">
+<div class="form-label">Client Name *</div>
+<input type="text" class="input" id="editName" placeholder="Full Name">
+</div>
+
+<div class="form-group">
+<div class="form-label">Address *</div>
+<input type="text" class="input" id="editAddress" placeholder="Street Address, City, State ZIP">
+</div>
+
+<div class="form-group">
+<div class="form-label">Phone Numbers</div>
+<div id="phoneList"></div>
+<button class="add-phone" onclick="addPhoneField()">+ Add Phone Number</button>
+</div>
+
+<div class="form-group">
+<div class="form-label">Visit Days</div>
+<div class="days-grid" id="daysGrid">
+<div class="day-btn" data-day="Mon" onclick="toggleDay(this)">Mon</div>
+<div class="day-btn" data-day="Tue" onclick="toggleDay(this)">Tue</div>
+<div class="day-btn" data-day="Wed" onclick="toggleDay(this)">Wed</div>
+<div class="day-btn" data-day="Thu" onclick="toggleDay(this)">Thu</div>
+<div class="day-btn" data-day="Fri" onclick="toggleDay(this)">Fri</div>
+<div class="day-btn" data-day="Sat" onclick="toggleDay(this)">Sat</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="form-label">Notes</div>
+<input type="text" class="input" id="editNotes" placeholder="Additional notes">
+</div>
+
+<button class="btn" onclick="saveClient()">Save Client</button>
+<button class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+
+</div>
+
+<button class="fab" id="routeFab" onclick="launchRoute()">🗺️</button>
+
 <script>
-var JBASE='https://api.jsonbin.io/v3';
-var DOW=[{k:'mon',l:'Mon'},{k:'tue',l:'Tue'},{k:'wed',l:'Wed'},{k:'thu',l:'Thu'},{k:'fri',l:'Fri'},{k:'sat',l:'Sat'}];
-var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var API_BASE = 'https://api.jsonbin.io/v3';
+var clients = [];
+var selectedClients = [];
+var editingId = null;
+var config = {apiKey: '', binId: ''};
+var viewDay = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date().getDay()];
 
-var S={
-locs:[],
-selArr:[],
-tab:'today',
-filter:'',
-mfilter:'',
-startAddr:'',
-showTip:false,
-editId:null,
-apiKey:'',
-binId:'',
-syncing:false,
-syncMsg:'',
-syncErr:false,
-toastMsg:'',
-toastOk:true,
-toastShow:false,
-toastTmr:null,
-akIn:'',
-biIn:''
-};
-var SEL=new Set(S.selArr);
-var NF=blank();
-var EF=blank();
-
-function blank(){return{name:'',address:'',contact:'',phone:'',phone2:'',category:'facility',notes:'',priority:false,day:'none'};}
-function saveLocs(){try{localStorage.setItem('rg_locs',JSON.stringify(S.locs));}catch(e){}}
-function saveSel(){try{localStorage.setItem('rg_sel',JSON.stringify([...SEL]));}catch(e){}}
-function esc(s){return String(s||'').replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');}
-function cp(p){return p.replace(/\D/g,'');}
-function fmtPh(v){var d=v.replace(/\D/g,'').slice(0,10);if(d.length<=3)return d;if(d.length<=6)return '('+d.slice(0,3)+') '+d.slice(3);return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);}
-function fmtDate(iso){if(!iso)return '';var d=new Date(iso);return (d.getMonth()+1)+'/'+d.getDate()+'/'+String(d.getFullYear()).slice(2);}
-function fmtTime(d){var h=d.getHours(),m=d.getMinutes(),a=h>=12?'pm':'am';h=h%12||12;return h+':'+String(m).padStart(2,'0')+a;}
-function tagCls(c){return {facility:'tf',client:'tc',office:'to',other:'tx'}[c]||'tx';}
-function tagLbl(c){return {facility:'Facility',client:'Client',office:'Office',other:'Other'}[c]||c;}
-function dayCls(d){return {mon:'dmon',tue:'dtue',wed:'dwed',thu:'dthu',fri:'dfri',sat:'dsat'}[d]||'';}
-function dayLbl(d){return {mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri',sat:'Sat'}[d]||'';}
-function tagH(c){return '<span class="tag '+tagCls(c)+'">'+tagLbl(c)+'</span>';}
-function dayH(d){if(!d||d==='none')return '';var dc=dayCls(d);if(!dc)return '';return '<span class="dtag '+dc+'">'+dayLbl(d)+'</span>';}
-
-function showToast(msg,ok){
-clearTimeout(S.toastTmr);
-S.toastMsg=msg;S.toastOk=(ok!==false);
-var t=document.getElementById('toast');
-if(t){t.textContent=msg;t.style.background=S.toastOk?'#16a34a':'#dc2626';t.className='toast show';}
-S.toastTmr=setTimeout(function(){var t=document.getElementById('toast');if(t)t.className='toast';},2500);
-}
-function hideToast(){clearTimeout(S.toastTmr);var t=document.getElementById('toast');if(t)t.className='toast';}
-function setStatus(msg,err){
-S.syncMsg=msg;S.syncErr=!!err;
-var el=document.getElementById('syncSt');
-if(el){el.textContent=msg;el.className='sync-st'+(err?' err':'');}
+function loadConfig() {
+    try {
+        var saved = localStorage.getItem('myClientsConfig');
+        if (saved) {
+            config = JSON.parse(saved);
+            document.getElementById('apiKey').value = config.apiKey || '';
+            document.getElementById('binId').value = config.binId || '';
+            updateSyncStatus('Connected');
+        }
+    } catch(e) {
+        config = {apiKey: '', binId: ''};
+    }
 }
 
-async function pushCloud(){
-if(!S.apiKey)return;
-try{
-if(!S.binId){
-var r=await fetch(JBASE+'/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':S.apiKey,'X-Bin-Name':'My Clients'},body:JSON.stringify({locations:S.locs})});
-if(!r.ok)throw 0;
-var d=await r.json();
-S.binId=d.metadata.id;
-localStorage.setItem('rg_binid',S.binId);
-setStatus('Bin ID: '+S.binId+' (use on 2nd phone)');
-}else{
-var r2=await fetch(JBASE+'/b/'+S.binId,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':S.apiKey},body:JSON.stringify({locations:S.locs})});
-if(!r2.ok)throw 0;
-setStatus('Synced '+fmtTime(new Date()));
-}
-}catch(e){setStatus('Sync failed - check API key',true);}
+function saveConfigLocal() {
+    try {
+        localStorage.setItem('myClientsConfig', JSON.stringify(config));
+    } catch(e) {}
 }
 
-async function pullCloud(silent){
-if(!S.apiKey||!S.binId)return false;
-S.syncing=true;
-var sb=document.getElementById('syncBtn');
-if(sb)sb.style.background='#e8590c';
-try{
-var r=await fetch(JBASE+'/b/'+S.binId+'/latest',{headers:{'X-Master-Key':S.apiKey}});
-if(!r.ok)throw 0;
-var d=await r.json();
-S.locs=d.record.locations||[];
-saveLocs();
-setStatus('Synced '+fmtTime(new Date()));
-if(!silent)showToast('Locations synced');
-render();return true;
-}catch(e){
-setStatus('Sync failed - check API key',true);
-if(!silent)showToast('Sync failed',false);
-return false;
-}finally{
-S.syncing=false;
-var sb2=document.getElementById('syncBtn');
-if(sb2)sb2.style.background='#1a2040';
-}
+function saveConfig() {
+    var key = document.getElementById('apiKey').value.trim();
+    var bid = document.getElementById('binId').value.trim();
+    
+    if (!key) {
+        alert('Please enter your JSONBin API key');
+        return;
+    }
+    
+    config.apiKey = key;
+    config.binId = bid;
+    saveConfigLocal();
+    
+    syncNow();
 }
 
-async function saveSync(){saveLocs();render();await pushCloud();}
-
-function getSorted(){
-var tod=['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
-return S.locs.slice().sort(function(a,b){
-var at=a.day===tod?0:1,bt=b.day===tod?0:1;
-if(at!==bt)return at-bt;
-return a.name.localeCompare(b.name);
-});
+function resetConfig() {
+    if (confirm('Clear sync credentials? Your cloud data will NOT be deleted.')) {
+        config = {apiKey: '', binId: ''};
+        saveConfigLocal();
+        document.getElementById('apiKey').value = '';
+        document.getElementById('binId').value = '';
+        updateSyncStatus('Not connected');
+        alert('Credentials cleared');
+    }
 }
 
-function locFields(pfx,data){
-var dOpts='<option value="none"'+((!data.day||data.day==='none')?' selected':'')+'>No day assigned</option>';
-DOW.forEach(function(d){dOpts+='<option value="'+d.k+'"'+(data.day===d.k?' selected':'')+'>'+d.l+'</option>';});
-var cOpts=['facility','client','office','other'].map(function(c){
-return '<option value="'+c+'"'+(data.category===c?' selected':'')+'>'+(c.charAt(0).toUpperCase()+c.slice(1))+'</option>';
-}).join('');
-return '<div class="frm-row"><label class="frm-lbl">Name / Label</label>'+
-'<input class="frm-in" value="'+esc(data.name)+'" oninput="setFld(\''+pfx+'\',\'name\',this.value)" placeholder="e.g. Sunrise Senior Living"></div>'+
-'<div class="frm-row"><label class="frm-lbl">Full Address</label>'+
-'<input class="frm-in" value="'+esc(data.address)+'" oninput="setFld(\''+pfx+'\',\'address\',this.value)" placeholder="123 Main St, Katy TX 77449"></div>'+
-'<div class="frm-row"><label class="frm-lbl">Contact Name</label>'+
-'<input class="frm-in" value="'+esc(data.contact)+'" oninput="setFld(\''+pfx+'\',\'contact\',this.value)" placeholder="Jane Smith"></div>'+
-'<div class="frm-row2">'+
-'<div><label class="frm-lbl">Phone 1</label><input class="frm-in" type="tel" value="'+esc(data.phone)+'" oninput="setPhFld(\''+pfx+'\',\'phone\',this.value)" placeholder="(281) 555-0100"></div>'+
-'<div><label class="frm-lbl">Phone 2</label><input class="frm-in" type="tel" value="'+esc(data.phone2||'')+'" oninput="setPhFld(\''+pfx+'\',\'phone2\',this.value)" placeholder="(281) 555-0101"></div>'+
-'</div>'+
-'<div class="frm-row2">'+
-'<div><label class="frm-lbl">Category</label><select class="frm-in" onchange="setFld(\''+pfx+'\',\'category\',this.value)">'+cOpts+'</select></div>'+
-'<div><label class="frm-lbl">Notes</label><input class="frm-in" value="'+esc(data.notes)+'" oninput="setFld(\''+pfx+'\',\'notes\',this.value)" placeholder="Ask for Linda..."></div>'+
-'</div>'+
-'<div class="frm-row"><label class="frm-lbl">Scheduled Day</label>'+
-'<select class="frm-in" onchange="setFld(\''+pfx+'\',\'day\',this.value)">'+dOpts+'</select></div>'+
-'<div class="pri-tog'+(data.priority?' on':'')+'" id="pt'+pfx+'" onclick="togPri(\''+pfx+'\')">'+
-'<span id="ps'+pfx+'">'+(data.priority?'⭐':'☆')+'</span>'+
-'<span class="pri-lbl" id="pl'+pfx+'">'+(data.priority?'Priority - sorts to top':'Mark as Priority')+'</span></div>';
+function updateSyncStatus(msg) {
+    document.getElementById('syncStatus').textContent = msg;
 }
 
-function setFld(p,f,v){(p==='N'?NF:EF)[f]=v;}
-function setPhFld(p,f,v){(p==='N'?NF:EF)[f]=fmtPh(v);}
-function togPri(p){
-var f=p==='N'?NF:EF;f.priority=!f.priority;
-var el=document.getElementById('pt'+p);if(el)el.className='pri-tog'+(f.priority?' on':'');
-var s=document.getElementById('ps'+p);if(s)s.innerHTML=f.priority?'⭐':'☆';
-var l=document.getElementById('pl'+p);if(l)l.textContent=f.priority?'Priority - sorts to top':'Mark as Priority';
+function syncNow() {
+    if (!config.apiKey) {
+        updateSyncStatus('Not connected - add API key in Settings');
+        return;
+    }
+    
+    updateSyncStatus('Syncing...');
+    
+    if (config.binId) {
+        pullFromCloud();
+    } else {
+        pushToCloud();
+    }
 }
 
-function render(){
-var now=new Date(),sc=SEL.size,sorted=getSorted();
-var h='';
-h+='<div class="header"><div class="header-top"><div class="app-title">My <span>Clients</span></div>';
-h+='<div class="hright"><button id="syncBtn" class="sync-btn" onclick="pullCloud(false)">↻ Sync</button>';
-h+='<button class="reset-btn" onclick="doReset()">⚙️</button>';
-h+='<div class="date-badge">'+WD[now.getDay()]+' '+MO[now.getMonth()]+' '+now.getDate()+'</div></div></div>';
-h+='<div id="syncSt" class="sync-st'+(S.syncErr?' err':'')+'">'+esc(S.syncMsg)+'</div></div>';
-h+='<div class="tabs"><button class="tab'+(S.tab==='today'?' active':'')+'" onclick="switchTab(\'today\')">Today's Route</button>';
-h+='<button class="tab'+(S.tab==='manage'?' active':'')+'" onclick="switchTab(\'manage\')">Manage Locations</button></div>';
-
-if(S.tab==='today'){
-h+='<div class="panel">';
-if(!S.apiKey){
-h+='<div class="setup-box"><div class="setup-box-title">☁️ Connect Cloud Sync</div>';
-h+='<div class="setup-box-sub">Enter your JSONBin <b>Master Key</b> to sync across both phones. Get one free at jsonbin.io → API Keys → Master Key. On your 2nd phone also enter the Bin ID shown after connecting.</div>';
-h+='<div class="setup-row"><input class="setup-in" id="akIn" value="'+esc(S.akIn)+'" placeholder="Master Key: $2b$10$..."></div>';
-h+='<div class="setup-row"><input class="setup-in" id="biIn" value="'+esc(S.biIn)+'" placeholder="Bin ID (2nd phone only)"><button class="setup-btn" onclick="doConnect()">Connect</button></div></div>';
-}
-h+='<div class="route-sum"><div><div class="sum-label">Stops selected</div>';
-h+='<div class="sum-count" id="selCount">'+sc+' <span>stop'+(sc!==1?'s':'')+'</span></div></div>';
-h+='<div class="sum-right"><div class="sum-right-lbl">Start from</div>';
-h+='<div class="sum-right-val" id="startLbl">'+esc(S.startAddr||'Current location')+'</div></div></div>';
-h+='<div class="frm-row" style="margin-bottom:10px"><div class="fld-lbl">Starting address (optional)</div>';
-h+='<input class="txt-in" value="'+esc(S.startAddr)+'" oninput="S.startAddr=this.value;var e=document.getElementById(\'startLbl\');if(e)e.textContent=this.value||\'Current location\'" placeholder="Leave blank to use current location"></div>';
-h+='<div class="sel-acts"><button class="sel-btn" onclick="selAll()">Select All</button>';
-h+='<button class="sel-btn" onclick="selPri()">⭐ Priority</button>';
-h+='<button class="sel-btn" onclick="selNone()">Clear All</button></div>';
-h+='<input class="srch-in" value="'+esc(S.filter)+'" oninput="S.filter=this.value;renderStopList()" placeholder="&#128269; Filter locations...">';
-h+='<div id="stopList" class="stop-list">'+buildStopList(sorted)+'</div>';
-if(S.showTip){
-h+='<div class="opt-tip"><span style="font-size:18px;flex-shrink:0">💡</span><div>';
-h+='<div class="opt-title">Optimize your route in Maps</div>';
-h+='<div class="opt-sub">Once Maps opens, tap ⋯ then <b>Optimize route</b> to eliminate backtracking.</div></div>';
-h+='<button class="opt-x" onclick="S.showTip=false;this.closest(\'.opt-tip\').remove()">×</button></div>';
-}
-h+='</div>';
-h+='<button class="fab'+(sc===0?' hidden':'')+'" id="fab" onclick="launchRoute()" style="background:#b84000;color:#fff">';
-h+='🗺 Open in Maps <span class="fab-badge">'+sc+'</span></button>';
+function pullFromCloud() {
+    fetch(API_BASE + '/b/' + config.binId + '/latest', {
+        headers: {'X-Master-Key': config.apiKey}
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.record && data.record.clients) {
+            clients = data.record.clients;
+            renderAll();
+            updateSyncStatus('Synced');
+        }
+    })
+    .catch(function(err) {
+        updateSyncStatus('Sync failed');
+        console.error(err);
+    });
 }
 
-if(S.tab==='manage'){
-h+='<div class="panel"><div class="sec-lbl">Add New Location</div><div class="add-form">';
-h+=locFields('N',NF);
-h+='<button class="add-btn" onclick="doAdd()">+ Add Location</button></div>';
-h+='<div class="divider">Saved Locations</div>';
-h+='<input class="srch-in" value="'+esc(S.mfilter)+'" oninput="S.mfilter=this.value;renderSavedList()" placeholder="&#128269; Search saved locations...">';
-h+='<div id="savedList" class="saved-list">'+buildSavedList(sorted)+'</div></div>';
+function pushToCloud() {
+    var endpoint = config.binId ? '/b/' + config.binId : '/b';
+    var method = config.binId ? 'PUT' : 'POST';
+    
+    var headers = {
+        'Content-Type': 'application/json',
+        'X-Master-Key': config.apiKey
+    };
+    
+    if (!config.binId) {
+        headers['X-Bin-Name'] = 'My Clients';
+    }
+    
+    fetch(API_BASE + endpoint, {
+        method: method,
+        headers: headers,
+        body: JSON.stringify({clients: clients})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (!config.binId && data.metadata && data.metadata.id) {
+            config.binId = data.metadata.id;
+            saveConfigLocal();
+            document.getElementById('binId').value = config.binId;
+        }
+        updateSyncStatus('Synced');
+    })
+    .catch(function(err) {
+        updateSyncStatus('Sync failed');
+        console.error(err);
+    });
 }
 
-var editLoc=S.editId?S.locs.find(function(l){return l.id===S.editId;}):null;
-h+='<div class="modal-bg'+(editLoc?'':' hide')+'" id="modalBg" onclick="if(event.target===this)closeModal()">';
-h+='<div class="modal"><div class="modal-handle"></div><div class="modal-title">Edit Location</div>';
-if(editLoc)h+=locFields('E',EF);
-h+='<div class="modal-foot"><button class="modal-cancel" onclick="closeModal()">Cancel</button>';
-h+='<button class="modal-save" onclick="doSaveEdit()">Save Changes</button></div></div></div>';
-h+='<div id="toast" class="toast'+(S.toastShow?' show':'')+'" style="background:'+(S.toastOk?'#16a34a':'#dc2626')+'">'+esc(S.toastMsg)+'</div>';
-
-document.getElementById('root').innerHTML=h;
+function switchTab(tab) {
+    var tabs = document.querySelectorAll('.tab');
+    var containers = document.querySelectorAll('.container');
+    
+    tabs.forEach(function(t) { t.classList.remove('active'); });
+    containers.forEach(function(c) { c.classList.remove('active'); });
+    
+    if (tab === 'today') {
+        tabs[0].classList.add('active');
+        document.getElementById('todayTab').classList.add('active');
+        
+        var dayBtns = document.querySelectorAll('#todayTab .day-btn');
+        dayBtns.forEach(function(d) {
+            if (d.dataset.day === viewDay) {
+                d.classList.add('active');
+            } else {
+                d.classList.remove('active');
+            }
+        });
+        
+        renderToday();
+    } else if (tab === 'manage') {
+        tabs[1].classList.add('active');
+        document.getElementById('manageTab').classList.add('active');
+        renderClients();
+    } else if (tab === 'config') {
+        tabs[2].classList.add('active');
+        document.getElementById('configTab').classList.add('active');
+    }
 }
 
-function buildStopList(sorted){
-var f=S.filter.toLowerCase();
-var items=(sorted||getSorted()).filter(function(l){
-if(!f)return true;
-return l.name.toLowerCase().indexOf(f)>=0||l.address.toLowerCase().indexOf(f)>=0||(l.contact||'').toLowerCase().indexOf(f)>=0;
-});
-if(!S.locs.length)return '<div class="empty"><div class="empty-ico">📍</div><div class="empty-ttl">No locations saved yet</div><div class="empty-sub">Go to <b>Manage Locations</b> to add your facilities and clients.</div></div>';
-if(!items.length)return '<div class="empty"><div class="empty-ico">🔍</div><div class="empty-ttl">No matches</div><div class="empty-sub">Try a different search term.</div></div>';
-var h='';
-items.forEach(function(loc){
-var s=SEL.has(loc.id);
-var vl=loc.lastVisit?'Visited '+fmtDate(loc.lastVisit)+(loc.visitCount>1?' · '+loc.visitCount+'x':''):'';
-h+='<div class="stop-card'+(s?' sel':'')+(loc.priority?' pri':'')+'" onclick="togSel(\''+loc.id+'\')">';
-h+='<div class="chk">'+(s?'✓':'')+'</div>';
-h+='<div class="sbody"><div class="nm-row">'+(loc.priority?'<span>⭐</span>':'')+'<div class="snm">'+esc(loc.name)+'</div></div>';
-h+='<div class="sadr">'+esc(loc.address)+'</div>';
-if(loc.contact)h+='<div class="scnt">👤 '+esc(loc.contact)+'</div>';
-if(loc.notes)h+='<div class="snts">📋 '+esc(loc.notes)+'</div>';
-h+='<div class="smeta">'+tagH(loc.category)+dayH(loc.day);
-if(vl)h+='<span class="svis">'+vl+'</span>';
-h+='</div></div>';
-h+='<div class="sacts">';
-if(loc.phone||loc.phone2){
-h+='<div class="cbts">';
-if(loc.phone){h+='<a class="ibt" href="tel:'+cp(loc.phone)+'" onclick="event.stopPropagation()">📞</a><a class="ibt" href="sms:'+cp(loc.phone)+'" onclick="event.stopPropagation()">💬</a>';}
-if(loc.phone2){h+='<a class="ibt" href="tel:'+cp(loc.phone2)+'" onclick="event.stopPropagation()">📞₂</a><a class="ibt" href="sms:'+cp(loc.phone2)+'" onclick="event.stopPropagation()">💬₂</a>';}
-h+='</div>';
-}
-h+='</div></div>';
-});
-return h;
+function capitalize(str) {
+    return str.replace(/\b\w/g, function(c) { return c.toUpperCase(); });
 }
 
-function buildSavedList(sorted){
-var f=S.mfilter.toLowerCase();
-var items=(sorted||getSorted()).filter(function(l){
-if(!f)return true;
-return l.name.toLowerCase().indexOf(f)>=0||l.address.toLowerCase().indexOf(f)>=0||(l.contact||'').toLowerCase().indexOf(f)>=0||(l.category||'').toLowerCase().indexOf(f)>=0||(l.day||'').toLowerCase().indexOf(f)>=0;
-});
-if(!S.locs.length)return '<div class="empty"><div class="empty-ico">🏥</div><div class="empty-ttl">No locations yet</div><div class="empty-sub">Add your facilities, clients, and regular stops above.</div></div>';
-if(!items.length&&S.mfilter)return '<div class="empty"><div class="empty-ico">🔍</div><div class="empty-ttl">No matches</div><div class="empty-sub">Try a different search term.</div></div>';
-var h='';
-items.forEach(function(loc,i){
-var vl=loc.lastVisit?'📅 Last: '+fmtDate(loc.lastVisit):'';
-h+='<div class="saved-card'+(loc.priority?' pc':'')+'"><div class="sc-top">';
-h+='<div class="sc-num">'+String(i+1).padStart(2,'0')+'</div>';
-h+='<div class="sc-info"><div class="sc-nmrow">'+(loc.priority?'<span>⭐</span>':'')+'<div class="sc-nm">'+esc(loc.name)+'</div></div>';
-h+='<div class="sc-adr">'+esc(loc.address)+'</div>';
-if(loc.contact){
-h+='<div class="sc-cnt">👤 '+esc(loc.contact);
-if(loc.phone)h+=' · <a href="tel:'+cp(loc.phone)+'" style="color:#e8590c;text-decoration:none">📞</a> <a href="sms:'+cp(loc.phone)+'" style="color:#e8590c;text-decoration:none">💬</a> '+esc(loc.phone);
-if(loc.phone2)h+=' · <a href="tel:'+cp(loc.phone2)+'" style="color:#e8590c;text-decoration:none">📞</a> <a href="sms:'+cp(loc.phone2)+'" style="color:#e8590c;text-decoration:none">💬</a> '+esc(loc.phone2);
-h+='</div>';
-}
-if(loc.notes)h+='<div class="sc-nts">📋 '+esc(loc.notes)+'</div>';
-if(loc.day&&loc.day!=='none')h+='<div style="margin-top:4px">'+dayH(loc.day)+'</div>';
-h+='</div>';
-h+='<div class="sc-btns">'+tagH(loc.category);
-h+='<button class="edit-btn" onclick="openEdit(\''+loc.id+'\')">Edit</button>';
-h+='<button class="del-btn" onclick="doDelete(\''+loc.id+'\')">×</button></div></div>';
-h+='<div class="sc-foot">';
-if(vl)h+='<span class="vstat">'+vl+'</span>';
-h+='<span class="vstat">· '+(loc.visitCount||0)+' visit'+((loc.visitCount||0)!==1?'s':'')+'</span></div></div>';
-});
-return h;
+function formatPhone(input) {
+    var cleaned = input.value.replace(/\D/g, '');
+    if (cleaned.length > 10) cleaned = cleaned.substr(0, 10);
+    
+    var formatted = '';
+    if (cleaned.length > 0) {
+        formatted = '(' + cleaned.substr(0, 3);
+        if (cleaned.length > 3) {
+            formatted += ')-' + cleaned.substr(3, 3);
+            if (cleaned.length > 6) {
+                formatted += '-' + cleaned.substr(6, 4);
+            }
+        }
+    }
+    
+    input.value = formatted;
 }
 
-function renderStopList(){var el=document.getElementById('stopList');if(el)el.innerHTML=buildStopList();updateFab();}
-function renderSavedList(){var el=document.getElementById('savedList');if(el)el.innerHTML=buildSavedList();}
-function updateFab(){
-var f=document.getElementById('fab');if(!f)return;
-f.className='fab'+(SEL.size===0?' hidden':'');
-var b=f.querySelector('.fab-badge');if(b)b.textContent=SEL.size;
-var c=document.getElementById('selCount');if(c)c.innerHTML=SEL.size+' <span>stop'+(SEL.size!==1?'s':'')+'</span>';
-}
-function togSel(id){
-if(SEL.has(id))SEL.delete(id);else SEL.add(id);
-saveSel();
-var cards=document.querySelectorAll('.stop-card');
-cards.forEach(function(card){
-var oc=card.getAttribute('onclick');
-if(oc&&oc.indexOf(id)>=0){
-var loc=S.locs.find(function(l){return l.id===id;});
-card.className='stop-card'+(SEL.has(id)?' sel':'')+(loc&&loc.priority?' pri':'');
-var chk=card.querySelector('.chk');if(chk)chk.innerHTML=SEL.has(id)?'✓':'';
-}
-});
-updateFab();
-}
-function selAll(){S.locs.forEach(function(l){SEL.add(l.id);});saveSel();render();}
-function selNone(){SEL.clear();saveSel();render();}
-function selPri(){SEL.clear();S.locs.filter(function(l){return l.priority;}).forEach(function(l){SEL.add(l.id);});saveSel();render();}
-
-function buildAndLaunch(lat,lng){
-var stops=S.locs.filter(function(l){return SEL.has(l.id);});
-var enc=stops.map(function(l){return encodeURIComponent(l.address);});
-var all;
-if(S.startAddr)all=[encodeURIComponent(S.startAddr)].concat(enc);
-else if(lat&&lng)all=[lat+','+lng].concat(enc);
-else all=enc.slice();
-window.location.href='googlechrome://maps.google.com/maps/dir/'+all.join('/');
-showToast('Opening '+stops.length+' stop'+(stops.length>1?'s':'')+' in Maps');
-if(stops.length>1){S.showTip=true;render();}
-}
-function launchRoute(){
-var stops=S.locs.filter(function(l){return SEL.has(l.id);});
-if(!stops.length)return;
-if(!S.startAddr&&navigator.geolocation){
-showToast('Getting your location...');
-navigator.geolocation.getCurrentPosition(
-function(p){buildAndLaunch(p.coords.latitude,p.coords.longitude);},
-function(){buildAndLaunch(null,null);},
-{timeout:5000,maximumAge:30000}
-);
-}else{buildAndLaunch(null,null);}
+function addPhoneField(value) {
+    var div = document.createElement('div');
+    div.className = 'phone-group';
+    div.innerHTML = '<input type="tel" class="input" placeholder="(xxx)-xxx-xxxx" value="' + (value || '') + '" oninput="formatPhone(this)">' +
+                    '<button onclick="removePhone(this)">Remove</button>';
+    document.getElementById('phoneList').appendChild(div);
 }
 
-async function doAdd(){
-if(!NF.name.trim()||!NF.address.trim()){showToast('Name and address required',false);return;}
-var loc=Object.assign({},NF,{id:String(Date.now()),visitCount:0,lastVisit:null});
-S.locs.push(loc);NF=blank();
-await saveSync();showToast(loc.name+' added!');
+function removePhone(btn) {
+    btn.parentElement.remove();
 }
-async function doDelete(id){
-if(!confirm('Remove this location?'))return;
-SEL.delete(id);
-S.locs=S.locs.filter(function(l){return l.id!==id;});
-await saveSync();showToast('Location removed');
-}
-function openEdit(id){
-var loc=S.locs.find(function(l){return l.id===id;});
-if(!loc)return;
-S.editId=id;
-EF=Object.assign({},blank(),loc,{day:loc.day||'none'});
-render();
-}
-function closeModal(){S.editId=null;render();}
-async function doSaveEdit(){
-if(!EF.name.trim()||!EF.address.trim()){showToast('Name and address required',false);return;}
-S.locs=S.locs.map(function(l){return l.id===S.editId?Object.assign({},l,EF,{day:EF.day||'none'}):l;});
-var nm=EF.name;S.editId=null;
-await saveSync();showToast(nm+' updated!');
-}
-async function doConnect(){
-var ak=document.getElementById('akIn'),bi=document.getElementById('biIn');
-var key=ak?ak.value.trim():'',bid=bi?bi.value.trim():'';
-if(!key){showToast('Please enter an API key',false);return;}
-S.apiKey=key;try{localStorage.setItem('rg_apikey',key);}catch(e){}
-if(bid){S.binId=bid;try{localStorage.setItem('rg_binid',bid);}catch(e){}}
-showToast('Connecting...');
-var pulled=await pullCloud(true);
-if(!pulled)await pushCloud();
-render();
-}
-function doReset(){
-if(!confirm('Reset sync credentials? Your cloud data is NOT deleted.'))return;
-S.apiKey='';S.binId='';
-try{localStorage.removeItem('rg_apikey');localStorage.removeItem('rg_binid');}catch(e){}
-setStatus('Not connected - enter API key above');
-showToast('Credentials cleared');render();
-}
-function switchTab(t){S.tab=t;hideToast();render();}
 
-if(S.apiKey&&S.binId){pullCloud(true);}
-else if(!S.apiKey){S.syncMsg='Not connected - enter API key above';}
-window.addEventListener('focus',function(){hideToast();});
-document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')hideToast();});
-render();
+function toggleDay(btn) {
+    btn.classList.toggle('selected');
+}
+
+function showAddForm() {
+    editingId = null;
+    document.getElementById('formTitle').textContent = 'Add New Client';
+    document.getElementById('editName').value = '';
+    document.getElementById('editAddress').value = '';
+    document.getElementById('editNotes').value = '';
+    document.getElementById('phoneList').innerHTML = '';
+    addPhoneField();
+    
+    var days = document.querySelectorAll('.day-btn');
+    days.forEach(function(d) { d.classList.remove('selected'); });
+    
+    document.getElementById('manageTab').classList.remove('active');
+    document.getElementById('editFormTab').style.display = 'block';
+    document.getElementById('editFormTab').classList.add('active');
+}
+
+function editClient(id) {
+    var client = clients.find(function(c) { return c.id === id; });
+    if (!client) return;
+    
+    editingId = id;
+    document.getElementById('formTitle').textContent = 'Edit Client';
+    document.getElementById('editName').value = client.name;
+    document.getElementById('editAddress').value = client.address;
+    document.getElementById('editNotes').value = client.notes || '';
+    
+    document.getElementById('phoneList').innerHTML = '';
+    if (client.phones && client.phones.length > 0) {
+        client.phones.forEach(function(p) { addPhoneField(p); });
+    } else {
+        addPhoneField();
+    }
+    
+    var days = document.querySelectorAll('.day-btn');
+    days.forEach(function(d) {
+        if (client.days && client.days.indexOf(d.dataset.day) !== -1) {
+            d.classList.add('selected');
+        } else {
+            d.classList.remove('selected');
+        }
+    });
+    
+    document.getElementById('manageTab').classList.remove('active');
+    document.getElementById('editFormTab').style.display = 'block';
+    document.getElementById('editFormTab').classList.add('active');
+}
+
+function cancelEdit() {
+    document.getElementById('editFormTab').style.display = 'none';
+    document.getElementById('editFormTab').classList.remove('active');
+    document.getElementById('manageTab').classList.add('active');
+}
+
+function saveClient() {
+    var name = capitalize(document.getElementById('editName').value.trim());
+    var address = capitalize(document.getElementById('editAddress').value.trim());
+    var notes = capitalize(document.getElementById('editNotes').value.trim());
+    
+    if (!name || !address) {
+        alert('Name and Address are required');
+        return;
+    }
+    
+    var phones = [];
+    var phoneInputs = document.querySelectorAll('#phoneList input');
+    phoneInputs.forEach(function(input) {
+        var val = input.value.trim();
+        if (val) phones.push(val);
+    });
+    
+    var days = [];
+    var selectedDays = document.querySelectorAll('.day-btn.selected');
+    selectedDays.forEach(function(d) {
+        days.push(d.dataset.day);
+    });
+    
+    var client = {
+        id: editingId || Date.now(),
+        name: name,
+        address: address,
+        phones: phones,
+        days: days,
+        notes: notes
+    };
+    
+    if (editingId) {
+        var index = clients.findIndex(function(c) { return c.id === editingId; });
+        clients[index] = client;
+    } else {
+        clients.push(client);
+    }
+    
+    pushToCloud();
+    cancelEdit();
+    renderAll();
+}
+
+function deleteClient(id) {
+    if (confirm('Delete this client?')) {
+        clients = clients.filter(function(c) { return c.id !== id; });
+        pushToCloud();
+        renderAll();
+    }
+}
+
+function toggleSelect(id) {
+    var index = selectedClients.indexOf(id);
+    if (index === -1) {
+        selectedClients.push(id);
+    } else {
+        selectedClients.splice(index, 1);
+    }
+    renderToday();
+    
+    var fab = document.getElementById('routeFab');
+    if (selectedClients.length > 0) {
+        fab.classList.add('show');
+    } else {
+        fab.classList.remove('show');
+    }
+}
+
+function launchRoute() {
+    if (selectedClients.length === 0) return;
+    
+    var addresses = [];
+    selectedClients.forEach(function(id) {
+        var client = clients.find(function(c) { return c.id === id; });
+        if (client && client.address) {
+            addresses.push(client.address);
+        }
+    });
+    
+    if (addresses.length === 0) return;
+    
+    var url = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(addresses[0]);
+    
+    if (addresses.length > 1) {
+        var waypoints = addresses.slice(1).map(function(a) { return encodeURIComponent(a); }).join('|');
+        url += '&waypoints=' + waypoints;
+    }
+    
+    window.open(url, '_blank');
+}
+
+function selectViewDay(btn) {
+    var dayBtns = document.querySelectorAll('#todayTab .day-btn');
+    dayBtns.forEach(function(d) { d.classList.remove('active'); });
+    btn.classList.add('active');
+    viewDay = btn.dataset.day;
+    selectedClients = [];
+    document.getElementById('routeFab').classList.remove('show');
+    renderToday();
+}
+
+function getTodayClients() {
+    return clients.filter(function(c) {
+        return c.days && c.days.indexOf(viewDay) !== -1;
+    });
+}
+
+function renderToday() {
+    var todayClients = getTodayClients();
+    var html = '';
+    
+    if (todayClients.length === 0) {
+        html = '<div class="empty">No clients scheduled for ' + viewDay + '</div>';
+    } else {
+        todayClients.forEach(function(c) {
+            var selected = selectedClients.indexOf(c.id) !== -1;
+            html += '<div class="client-item' + (selected ? ' selected' : '') + '" onclick="toggleSelect(' + c.id + ')">';
+            html += '<div class="client-name">' + esc(c.name) + '</div>';
+            html += '<div class="client-info">📍 ' + esc(c.address) + '</div>';
+            
+            if (c.phones && c.phones.length > 0) {
+                html += '<div class="client-info">';
+                c.phones.forEach(function(p) {
+                    html += '<a href="tel:' + p.replace(/\D/g, '') + '" class="phone-link" onclick="event.stopPropagation()">📞 Call</a>';
+                    html += '<a href="sms:' + p.replace(/\D/g, '') + '" class="phone-link" onclick="event.stopPropagation()">💬 Text</a>';
+                });
+                html += '</div>';
+            }
+            
+            if (c.notes) {
+                html += '<div class="client-info">💡 ' + esc(c.notes) + '</div>';
+            }
+            
+            html += '</div>';
+        });
+    }
+    
+    document.getElementById('todayList').innerHTML = html;
+}
+
+function renderClients() {
+    var html = '';
+    
+    if (clients.length === 0) {
+        html = '<div class="empty">No clients yet. Add your first client below!</div>';
+    } else {
+        clients.forEach(function(c) {
+            html += '<div class="client-item">';
+            html += '<div class="client-name">' + esc(c.name) + '</div>';
+            html += '<div class="client-info">📍 ' + esc(c.address) + '</div>';
+            
+            if (c.phones && c.phones.length > 0) {
+                html += '<div class="client-info">';
+                c.phones.forEach(function(p) {
+                    html += '📞 ' + esc(p) + ' ';
+                });
+                html += '</div>';
+            }
+            
+            if (c.days && c.days.length > 0) {
+                html += '<div class="client-days">Days: ' + c.days.join(', ') + '</div>';
+            }
+            
+            if (c.notes) {
+                html += '<div class="client-info">💡 ' + esc(c.notes) + '</div>';
+            }
+            
+            html += '<div class="client-actions">';
+            html += '<button class="edit-btn" onclick="editClient(' + c.id + ')">Edit</button>';
+            html += '<button class="delete-btn" onclick="deleteClient(' + c.id + ')">Delete</button>';
+            html += '</div>';
+            html += '</div>';
+        });
+    }
+    
+    document.getElementById('clientList').innerHTML = html;
+}
+
+function renderAll() {
+    renderToday();
+    renderClients();
+}
+
+function esc(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+loadConfig();
+renderAll();
+
+if (config.apiKey && config.binId) {
+    pullFromCloud();
+}
 </script>
 
 </body>
