@@ -135,95 +135,95 @@ var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 var S={
-locs:JSON.parse(localStorage.getItem(‘rg_locs’)||’[]’),
-selArr:JSON.parse(localStorage.getItem(‘rg_sel’)||’[]’),
-tab:‘today’,filter:’’,mfilter:’’,startAddr:’’,showTip:false,editId:null,
-apiKey:localStorage.getItem(‘rg_apikey’)||’’,
-binId:localStorage.getItem(‘rg_binid’)||’’,
-syncing:false,syncMsg:’’,syncErr:false,
-toastMsg:’’,toastOk:true,toastShow:false,toastTmr:null,
-akIn:’’,biIn:’’
+locs:JSON.parse(localStorage.getItem('rg_locs')||'[]'),
+selArr:JSON.parse(localStorage.getItem('rg_sel')||'[]'),
+tab:'today',filter:'',mfilter:'',startAddr:'',showTip:false,editId:null,
+apiKey:localStorage.getItem('rg_apikey')||'',
+binId:localStorage.getItem('rg_binid')||'',
+syncing:false,syncMsg:'',syncErr:false,
+toastMsg:'',toastOk:true,toastShow:false,toastTmr:null,
+akIn:'',biIn:''
 };
 var SEL=new Set(S.selArr);
 var NF=blank();
 var EF=blank();
 
-function blank(){return{name:’’,address:’’,contact:’’,phone:’’,phone2:’’,category:‘facility’,notes:’’,priority:false,day:‘none’};}
-function saveLocs(){localStorage.setItem(‘rg_locs’,JSON.stringify(S.locs));}
-function saveSel(){localStorage.setItem(‘rg_sel’,JSON.stringify([…SEL]));}
-function esc(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);}
-function cp(p){return p.replace(/\D/g,’’);}
-function fmtPh(v){var d=v.replace(/\D/g,’’).slice(0,10);if(d.length<=3)return d;if(d.length<=6)return ‘(’+d.slice(0,3)+’) ‘+d.slice(3);return ‘(’+d.slice(0,3)+’) ‘+d.slice(3,6)+’-’+d.slice(6);}
-function fmtDate(iso){if(!iso)return ‘’;var d=new Date(iso);return (d.getMonth()+1)+’/’+d.getDate()+’/’+String(d.getFullYear()).slice(2);}
-function fmtTime(d){var h=d.getHours(),m=d.getMinutes(),a=h>=12?‘pm’:‘am’;h=h%12||12;return h+’:’+String(m).padStart(2,‘0’)+a;}
-function tagCls(c){return {facility:‘tf’,client:‘tc’,office:‘to’,other:‘tx’}[c]||‘tx’;}
-function tagLbl(c){return {facility:‘Facility’,client:‘Client’,office:‘Office’,other:‘Other’}[c]||c;}
-function dayCls(d){return {mon:‘dmon’,tue:‘dtue’,wed:‘dwed’,thu:‘dthu’,fri:‘dfri’,sat:‘dsat’}[d]||’’;}
-function dayLbl(d){return {mon:‘Mon’,tue:‘Tue’,wed:‘Wed’,thu:‘Thu’,fri:‘Fri’,sat:‘Sat’}[d]||’’;}
-function tagH(c){return ‘<span class="tag '+tagCls(c)+'">’+tagLbl(c)+’</span>’;}
-function dayH(d){if(!d||d===‘none’)return ‘’;var dc=dayCls(d);if(!dc)return ‘’;return ‘<span class="dtag '+dc+'">’+dayLbl(d)+’</span>’;}
+function blank(){return{name:'',address:'',contact:'',phone:'',phone2:'',category:'facility',notes:'',priority:false,day:'none'};}
+function saveLocs(){localStorage.setItem('rg_locs',JSON.stringify(S.locs));}
+function saveSel(){localStorage.setItem('rg_sel',JSON.stringify([...SEL]));}
+function esc(s){return String(s||'').replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');}
+function cp(p){return p.replace(/\D/g,'');}
+function fmtPh(v){var d=v.replace(/\D/g,'').slice(0,10);if(d.length<=3)return d;if(d.length<=6)return '('+d.slice(0,3)+') '+d.slice(3);return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);}
+function fmtDate(iso){if(!iso)return '';var d=new Date(iso);return (d.getMonth()+1)+'/'+d.getDate()+'/'+String(d.getFullYear()).slice(2);}
+function fmtTime(d){var h=d.getHours(),m=d.getMinutes(),a=h>=12?'pm':'am';h=h%12||12;return h+':'+String(m).padStart(2,'0')+a;}
+function tagCls(c){return {facility:'tf',client:'tc',office:'to',other:'tx'}[c]||'tx';}
+function tagLbl(c){return {facility:'Facility',client:'Client',office:'Office',other:'Other'}[c]||c;}
+function dayCls(d){return {mon:'dmon',tue:'dtue',wed:'dwed',thu:'dthu',fri:'dfri',sat:'dsat'}[d]||'';}
+function dayLbl(d){return {mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri',sat:'Sat'}[d]||'';}
+function tagH(c){return '<span class="tag '+tagCls(c)+'">'+tagLbl(c)+'</span>';}
+function dayH(d){if(!d||d==='none')return '';var dc=dayCls(d);if(!dc)return '';return '<span class="dtag '+dc+'">'+dayLbl(d)+'</span>';}
 
 function showToast(msg,ok){
 clearTimeout(S.toastTmr);
 S.toastMsg=msg;S.toastOk=(ok!==false);
-var t=document.getElementById(‘toast’);
-if(t){t.textContent=msg;t.style.background=S.toastOk?’#16a34a’:’#dc2626’;t.className=‘toast show’;}
-S.toastTmr=setTimeout(function(){var t=document.getElementById(‘toast’);if(t)t.className=‘toast’;},2500);
+var t=document.getElementById('toast');
+if(t){t.textContent=msg;t.style.background=S.toastOk?'#16a34a':'#dc2626';t.className='toast show';}
+S.toastTmr=setTimeout(function(){var t=document.getElementById('toast');if(t)t.className='toast';},2500);
 }
-function hideToast(){clearTimeout(S.toastTmr);var t=document.getElementById(‘toast’);if(t)t.className=‘toast’;}
+function hideToast(){clearTimeout(S.toastTmr);var t=document.getElementById('toast');if(t)t.className='toast';}
 function setStatus(msg,err){
 S.syncMsg=msg;S.syncErr=!!err;
-var el=document.getElementById(‘syncSt’);
-if(el){el.textContent=msg;el.className=‘sync-st’+(err?’ err’:’’);}
+var el=document.getElementById('syncSt');
+if(el){el.textContent=msg;el.className='sync-st'+(err?' err':'');}
 }
 
 async function pushCloud(){
 if(!S.apiKey)return;
 try{
 if(!S.binId){
-var r=await fetch(JBASE+’/b’,{method:‘POST’,headers:{‘Content-Type’:‘application/json’,‘X-Master-Key’:S.apiKey,‘X-Bin-Name’:‘RouteGO’},body:JSON.stringify({locations:S.locs})});
+var r=await fetch(JBASE+'/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':S.apiKey,'X-Bin-Name':'My Clients'},body:JSON.stringify({locations:S.locs})});
 if(!r.ok)throw 0;
 var d=await r.json();
 S.binId=d.metadata.id;
-localStorage.setItem(‘rg_binid’,S.binId);
-setStatus(‘Bin ID: ‘+S.binId+’ (use on 2nd phone)’);
+localStorage.setItem('rg_binid',S.binId);
+setStatus('Bin ID: '+S.binId+' (use on 2nd phone)');
 }else{
-var r2=await fetch(JBASE+’/b/’+S.binId,{method:‘PUT’,headers:{‘Content-Type’:‘application/json’,‘X-Master-Key’:S.apiKey},body:JSON.stringify({locations:S.locs})});
+var r2=await fetch(JBASE+'/b/'+S.binId,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':S.apiKey},body:JSON.stringify({locations:S.locs})});
 if(!r2.ok)throw 0;
-setStatus(’Synced ’+fmtTime(new Date()));
+setStatus('Synced '+fmtTime(new Date()));
 }
-}catch(e){setStatus(‘Sync failed — check API key’,true);}
+}catch(e){setStatus('Sync failed - check API key',true);}
 }
 
 async function pullCloud(silent){
 if(!S.apiKey||!S.binId)return false;
 S.syncing=true;
-var sb=document.getElementById(‘syncBtn’);
-if(sb)sb.style.background=’#e8590c’;
+var sb=document.getElementById('syncBtn');
+if(sb)sb.style.background='#e8590c';
 try{
-var r=await fetch(JBASE+’/b/’+S.binId+’/latest’,{headers:{‘X-Master-Key’:S.apiKey}});
+var r=await fetch(JBASE+'/b/'+S.binId+'/latest',{headers:{'X-Master-Key':S.apiKey}});
 if(!r.ok)throw 0;
 var d=await r.json();
 S.locs=d.record.locations||[];
 saveLocs();
-setStatus(‘Synced ‘+fmtTime(new Date()));
-if(!silent)showToast(‘Locations synced’);
+setStatus('Synced '+fmtTime(new Date()));
+if(!silent)showToast('Locations synced');
 render();return true;
 }catch(e){
-setStatus(‘Sync failed — check API key’,true);
-if(!silent)showToast(‘Sync failed’,false);
+setStatus('Sync failed - check API key',true);
+if(!silent)showToast('Sync failed',false);
 return false;
 }finally{
 S.syncing=false;
-var sb2=document.getElementById(‘syncBtn’);
-if(sb2)sb2.style.background=’#1a2040’;
+var sb2=document.getElementById('syncBtn');
+if(sb2)sb2.style.background='#1a2040';
 }
 }
 
 async function saveSync(){saveLocs();render();await pushCloud();}
 
 function getSorted(){
-var tod=[‘sun’,‘mon’,‘tue’,‘wed’,‘thu’,‘fri’,‘sat’][new Date().getDay()];
+var tod=['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
 return S.locs.slice().sort(function(a,b){
 var at=a.day===tod?0:1,bt=b.day===tod?0:1;
 if(at!==bt)return at-bt;
@@ -232,131 +232,131 @@ return a.name.localeCompare(b.name);
 }
 
 function locFields(pfx,data){
-var dOpts=’<option value=“none”’+((!data.day||data.day===‘none’)?’ selected’:’’)+’>No day assigned</option>’;
-DOW.forEach(function(d){dOpts+=’<option value=”’+d.k+’”’+(data.day===d.k?’ selected’:’’)+’>’+d.l+’</option>’;});
-var cOpts=[‘facility’,‘client’,‘office’,‘other’].map(function(c){
-return ‘<option value=”’+c+’”’+(data.category===c?’ selected’:’’)+’>’+(c.charAt(0).toUpperCase()+c.slice(1))+’</option>’;
-}).join(’’);
-return ‘<div class="frm-row"><label class="frm-lbl">Name / Label</label>’+
-‘<input class="frm-in" value="'+esc(data.name)+'" oninput="setFld(\''+pfx+'\',\'name\',this.value)" placeholder="e.g. Sunrise Senior Living"></div>’+
-‘<div class="frm-row"><label class="frm-lbl">Full Address</label>’+
-‘<input class="frm-in" value="'+esc(data.address)+'" oninput="setFld(\''+pfx+'\',\'address\',this.value)" placeholder="123 Main St, Katy TX 77449"></div>’+
-‘<div class="frm-row"><label class="frm-lbl">Contact Name</label>’+
-‘<input class="frm-in" value="'+esc(data.contact)+'" oninput="setFld(\''+pfx+'\',\'contact\',this.value)" placeholder="Jane Smith"></div>’+
-‘<div class="frm-row2">’+
-‘<div><label class="frm-lbl">Phone 1</label><input class="frm-in" type="tel" value="'+esc(data.phone)+'" oninput="setPhFld(\''+pfx+'\',\'phone\',this.value)" placeholder="(281) 555-0100"></div>’+
-‘<div><label class="frm-lbl">Phone 2</label><input class="frm-in" type="tel" value="'+esc(data.phone2||'')+'" oninput="setPhFld(\''+pfx+'\',\'phone2\',this.value)" placeholder="(281) 555-0101"></div>’+
-‘</div>’+
-‘<div class="frm-row2">’+
-‘<div><label class="frm-lbl">Category</label><select class="frm-in" onchange="setFld(\''+pfx+'\',\'category\',this.value)">’+cOpts+’</select></div>’+
-‘<div><label class="frm-lbl">Notes</label><input class="frm-in" value="'+esc(data.notes)+'" oninput="setFld(\''+pfx+'\',\'notes\',this.value)" placeholder="Ask for Linda..."></div>’+
-‘</div>’+
-‘<div class="frm-row"><label class="frm-lbl">Scheduled Day</label>’+
-‘<select class="frm-in" onchange="setFld(\''+pfx+'\',\'day\',this.value)">’+dOpts+’</select></div>’+
-‘<div class="pri-tog'+(data.priority?' on':'')+'" id="pt'+pfx+'" onclick="togPri(\''+pfx+'\')">’+
-‘<span id="ps'+pfx+'">’+(data.priority?’⭐’:’☆’)+’</span>’+
-‘<span class="pri-lbl" id="pl'+pfx+'">’+(data.priority?‘Priority — sorts to top’:‘Mark as Priority’)+’</span></div>’;
+var dOpts='<option value="none"'+((!data.day||data.day==='none')?' selected':'')+'>No day assigned</option>';
+DOW.forEach(function(d){dOpts+='<option value="'+d.k+'"'+(data.day===d.k?' selected':'')+'>'+d.l+'</option>';});
+var cOpts=['facility','client','office','other'].map(function(c){
+return '<option value="'+c+'"'+(data.category===c?' selected':'')+'>'+(c.charAt(0).toUpperCase()+c.slice(1))+'</option>';
+}).join('');
+return '<div class="frm-row"><label class="frm-lbl">Name / Label</label>'+
+'<input class="frm-in" value="'+esc(data.name)+'" oninput="setFld(\''+pfx+'\',\'name\',this.value)" placeholder="e.g. Sunrise Senior Living"></div>'+
+'<div class="frm-row"><label class="frm-lbl">Full Address</label>'+
+'<input class="frm-in" value="'+esc(data.address)+'" oninput="setFld(\''+pfx+'\',\'address\',this.value)" placeholder="123 Main St, Katy TX 77449"></div>'+
+'<div class="frm-row"><label class="frm-lbl">Contact Name</label>'+
+'<input class="frm-in" value="'+esc(data.contact)+'" oninput="setFld(\''+pfx+'\',\'contact\',this.value)" placeholder="Jane Smith"></div>'+
+'<div class="frm-row2">'+
+'<div><label class="frm-lbl">Phone 1</label><input class="frm-in" type="tel" value="'+esc(data.phone)+'" oninput="setPhFld(\''+pfx+'\',\'phone\',this.value)" placeholder="(281) 555-0100"></div>'+
+'<div><label class="frm-lbl">Phone 2</label><input class="frm-in" type="tel" value="'+esc(data.phone2||'')+'" oninput="setPhFld(\''+pfx+'\',\'phone2\',this.value)" placeholder="(281) 555-0101"></div>'+
+'</div>'+
+'<div class="frm-row2">'+
+'<div><label class="frm-lbl">Category</label><select class="frm-in" onchange="setFld(\''+pfx+'\',\'category\',this.value)">'+cOpts+'</select></div>'+
+'<div><label class="frm-lbl">Notes</label><input class="frm-in" value="'+esc(data.notes)+'" oninput="setFld(\''+pfx+'\',\'notes\',this.value)" placeholder="Ask for Linda..."></div>'+
+'</div>'+
+'<div class="frm-row"><label class="frm-lbl">Scheduled Day</label>'+
+'<select class="frm-in" onchange="setFld(\''+pfx+'\',\'day\',this.value)">'+dOpts+'</select></div>'+
+'<div class="pri-tog'+(data.priority?' on':'')+'" id="pt'+pfx+'" onclick="togPri(\''+pfx+'\')">'+
+'<span id="ps'+pfx+'">'+(data.priority?'⭐':'☆')+'</span>'+
+'<span class="pri-lbl" id="pl'+pfx+'">'+(data.priority?'Priority - sorts to top':'Mark as Priority')+'</span></div>';
 }
 
-function setFld(p,f,v){(p===‘N’?NF:EF)[f]=v;}
-function setPhFld(p,f,v){(p===‘N’?NF:EF)[f]=fmtPh(v);}
+function setFld(p,f,v){(p==='N'?NF:EF)[f]=v;}
+function setPhFld(p,f,v){(p==='N'?NF:EF)[f]=fmtPh(v);}
 function togPri(p){
-var f=p===‘N’?NF:EF;f.priority=!f.priority;
-var el=document.getElementById(‘pt’+p);if(el)el.className=‘pri-tog’+(f.priority?’ on’:’’);
-var s=document.getElementById(‘ps’+p);if(s)s.innerHTML=f.priority?’⭐’:’☆’;
-var l=document.getElementById(‘pl’+p);if(l)l.textContent=f.priority?‘Priority — sorts to top’:‘Mark as Priority’;
+var f=p==='N'?NF:EF;f.priority=!f.priority;
+var el=document.getElementById('pt'+p);if(el)el.className='pri-tog'+(f.priority?' on':'');
+var s=document.getElementById('ps'+p);if(s)s.innerHTML=f.priority?'⭐':'☆';
+var l=document.getElementById('pl'+p);if(l)l.textContent=f.priority?'Priority - sorts to top':'Mark as Priority';
 }
 
 function render(){
 var now=new Date(),sc=SEL.size,sorted=getSorted();
-var h=’’;
-h+=’<div class="header"><div class="header-top"><div class="app-title">My <span>Clients</span></div>’;
-h+=’<div class="hright"><button id="syncBtn" class="sync-btn" onclick="pullCloud(false)">↻ Sync</button>’;
-h+=’<button class="reset-btn" onclick="doReset()">⚙️</button>’;
-h+=’<div class="date-badge">’+WD[now.getDay()]+’ ‘+MO[now.getMonth()]+’ ‘+now.getDate()+’</div></div></div>’;
-h+=’<div id="syncSt" class="sync-st'+(S.syncErr?' err':'')+'">’+esc(S.syncMsg)+’</div></div>’;
-h+=’<div class="tabs"><button class="tab'+(S.tab==='today'?' active':'')+'" onclick="switchTab(\'today\')">Today's Route</button>’;
-h+=’<button class="tab'+(S.tab==='manage'?' active':'')+'" onclick="switchTab(\'manage\')">Manage Locations</button></div>’;
+var h='';
+h+='<div class="header"><div class="header-top"><div class="app-title">My <span>Clients</span></div>';
+h+='<div class="hright"><button id="syncBtn" class="sync-btn" onclick="pullCloud(false)">↻ Sync</button>';
+h+='<button class="reset-btn" onclick="doReset()">⚙️</button>';
+h+='<div class="date-badge">'+WD[now.getDay()]+' '+MO[now.getMonth()]+' '+now.getDate()+'</div></div></div>';
+h+='<div id="syncSt" class="sync-st'+(S.syncErr?' err':'')+'">'+esc(S.syncMsg)+'</div></div>';
+h+='<div class="tabs"><button class="tab'+(S.tab==='today'?' active':'')+'" onclick="switchTab(\'today\')">Today's Route</button>';
+h+='<button class="tab'+(S.tab==='manage'?' active':'')+'" onclick="switchTab(\'manage\')">Manage Locations</button></div>';
 
-if(S.tab===‘today’){
-h+=’<div class="panel">’;
+if(S.tab==='today'){
+h+='<div class="panel">';
 if(!S.apiKey){
-h+=’<div class="setup-box"><div class="setup-box-title">☁️ Connect Cloud Sync</div>’;
-h+=’<div class="setup-box-sub">Enter your JSONBin <b>Master Key</b> to sync across both phones. Get one free at jsonbin.io → API Keys → Master Key. On your 2nd phone also enter the Bin ID shown after connecting.</div>’;
-h+=’<div class="setup-row"><input class="setup-in" id="akIn" value="'+esc(S.akIn)+'" placeholder="Master Key: $2b$10$..."></div>’;
-h+=’<div class="setup-row"><input class="setup-in" id="biIn" value="'+esc(S.biIn)+'" placeholder="Bin ID (2nd phone only)"><button class="setup-btn" onclick="doConnect()">Connect</button></div></div>’;
+h+='<div class="setup-box"><div class="setup-box-title">☁️ Connect Cloud Sync</div>';
+h+='<div class="setup-box-sub">Enter your JSONBin <b>Master Key</b> to sync across both phones. Get one free at jsonbin.io → API Keys → Master Key. On your 2nd phone also enter the Bin ID shown after connecting.</div>';
+h+='<div class="setup-row"><input class="setup-in" id="akIn" value="'+esc(S.akIn)+'" placeholder="Master Key: $2b$10$..."></div>';
+h+='<div class="setup-row"><input class="setup-in" id="biIn" value="'+esc(S.biIn)+'" placeholder="Bin ID (2nd phone only)"><button class="setup-btn" onclick="doConnect()">Connect</button></div></div>';
 }
-h+=’<div class="route-sum"><div><div class="sum-label">Stops selected</div>’;
-h+=’<div class="sum-count" id="selCount">’+sc+’ <span>stop’+(sc!==1?‘s’:’’)+’</span></div></div>’;
-h+=’<div class="sum-right"><div class="sum-right-lbl">Start from</div>’;
-h+=’<div class="sum-right-val" id="startLbl">’+esc(S.startAddr||‘Current location’)+’</div></div></div>’;
-h+=’<div class="frm-row" style="margin-bottom:10px"><div class="fld-lbl">Starting address (optional)</div>’;
-h+=’<input class="txt-in" value="'+esc(S.startAddr)+'" oninput="S.startAddr=this.value;var e=document.getElementById(\'startLbl\');if(e)e.textContent=this.value||\'Current location\'" placeholder="Leave blank to use current location"></div>’;
-h+=’<div class="sel-acts"><button class="sel-btn" onclick="selAll()">Select All</button>’;
-h+=’<button class="sel-btn" onclick="selPri()">⭐ Priority</button>’;
-h+=’<button class="sel-btn" onclick="selNone()">Clear All</button></div>’;
-h+=’<input class="srch-in" value="'+esc(S.filter)+'" oninput="S.filter=this.value;renderStopList()" placeholder="&#128269; Filter locations...">’;
-h+=’<div id="stopList" class="stop-list">’+buildStopList(sorted)+’</div>’;
+h+='<div class="route-sum"><div><div class="sum-label">Stops selected</div>';
+h+='<div class="sum-count" id="selCount">'+sc+' <span>stop'+(sc!==1?'s':'')+'</span></div></div>';
+h+='<div class="sum-right"><div class="sum-right-lbl">Start from</div>';
+h+='<div class="sum-right-val" id="startLbl">'+esc(S.startAddr||'Current location')+'</div></div></div>';
+h+='<div class="frm-row" style="margin-bottom:10px"><div class="fld-lbl">Starting address (optional)</div>';
+h+='<input class="txt-in" value="'+esc(S.startAddr)+'" oninput="S.startAddr=this.value;var e=document.getElementById(\'startLbl\');if(e)e.textContent=this.value||\'Current location\'" placeholder="Leave blank to use current location"></div>';
+h+='<div class="sel-acts"><button class="sel-btn" onclick="selAll()">Select All</button>';
+h+='<button class="sel-btn" onclick="selPri()">⭐ Priority</button>';
+h+='<button class="sel-btn" onclick="selNone()">Clear All</button></div>';
+h+='<input class="srch-in" value="'+esc(S.filter)+'" oninput="S.filter=this.value;renderStopList()" placeholder="&#128269; Filter locations...">';
+h+='<div id="stopList" class="stop-list">'+buildStopList(sorted)+'</div>';
 if(S.showTip){
-h+=’<div class="opt-tip"><span style="font-size:18px;flex-shrink:0">💡</span><div>’;
-h+=’<div class="opt-title">Optimize your route in Maps</div>’;
-h+=’<div class="opt-sub">Once Maps opens, tap ⋯ then <b>Optimize route</b> to eliminate backtracking.</div></div>’;
-h+=’<button class="opt-x" onclick="S.showTip=false;this.closest(\'.opt-tip\').remove()">×</button></div>’;
+h+='<div class="opt-tip"><span style="font-size:18px;flex-shrink:0">💡</span><div>';
+h+='<div class="opt-title">Optimize your route in Maps</div>';
+h+='<div class="opt-sub">Once Maps opens, tap ⋯ then <b>Optimize route</b> to eliminate backtracking.</div></div>';
+h+='<button class="opt-x" onclick="S.showTip=false;this.closest(\'.opt-tip\').remove()">×</button></div>';
 }
-h+=’</div>’;
-h+=’<button class="fab'+(sc===0?' hidden':'')+'" id="fab" onclick="launchRoute()" style="background:#b84000;color:#fff">’;
-h+=’🗺 Open in Maps <span class="fab-badge">’+sc+’</span></button>’;
+h+='</div>';
+h+='<button class="fab'+(sc===0?' hidden':'')+'" id="fab" onclick="launchRoute()" style="background:#b84000;color:#fff">';
+h+='🗺 Open in Maps <span class="fab-badge">'+sc+'</span></button>';
 }
 
-if(S.tab===‘manage’){
-h+=’<div class="panel"><div class="sec-lbl">Add New Location</div><div class="add-form">’;
-h+=locFields(‘N’,NF);
-h+=’<button class="add-btn" onclick="doAdd()">+ Add Location</button></div>’;
-h+=’<div class="divider">Saved Locations</div>’;
-h+=’<input class="srch-in" value="'+esc(S.mfilter)+'" oninput="S.mfilter=this.value;renderSavedList()" placeholder="&#128269; Search saved locations...">’;
-h+=’<div id="savedList" class="saved-list">’+buildSavedList(sorted)+’</div></div>’;
+if(S.tab==='manage'){
+h+='<div class="panel"><div class="sec-lbl">Add New Location</div><div class="add-form">';
+h+=locFields('N',NF);
+h+='<button class="add-btn" onclick="doAdd()">+ Add Location</button></div>';
+h+='<div class="divider">Saved Locations</div>';
+h+='<input class="srch-in" value="'+esc(S.mfilter)+'" oninput="S.mfilter=this.value;renderSavedList()" placeholder="&#128269; Search saved locations...">';
+h+='<div id="savedList" class="saved-list">'+buildSavedList(sorted)+'</div></div>';
 }
 
 var editLoc=S.editId?S.locs.find(function(l){return l.id===S.editId;}):null;
-h+=’<div class="modal-bg'+(editLoc?'':' hide')+'" id="modalBg" onclick="if(event.target===this)closeModal()">’;
-h+=’<div class="modal"><div class="modal-handle"></div><div class="modal-title">Edit Location</div>’;
-if(editLoc)h+=locFields(‘E’,EF);
-h+=’<div class="modal-foot"><button class="modal-cancel" onclick="closeModal()">Cancel</button>’;
-h+=’<button class="modal-save" onclick="doSaveEdit()">Save Changes</button></div></div></div>’;
-h+=’<div id="toast" class="toast'+(S.toastShow?' show':'')+'" style="background:'+(S.toastOk?'#16a34a':'#dc2626')+'">’+esc(S.toastMsg)+’</div>’;
+h+='<div class="modal-bg'+(editLoc?'':' hide')+'" id="modalBg" onclick="if(event.target===this)closeModal()">';
+h+='<div class="modal"><div class="modal-handle"></div><div class="modal-title">Edit Location</div>';
+if(editLoc)h+=locFields('E',EF);
+h+='<div class="modal-foot"><button class="modal-cancel" onclick="closeModal()">Cancel</button>';
+h+='<button class="modal-save" onclick="doSaveEdit()">Save Changes</button></div></div></div>';
+h+='<div id="toast" class="toast'+(S.toastShow?' show':'')+'" style="background:'+(S.toastOk?'#16a34a':'#dc2626')+'">'+esc(S.toastMsg)+'</div>';
 
-document.getElementById(‘root’).innerHTML=h;
+document.getElementById('root').innerHTML=h;
 }
 
 function buildStopList(sorted){
 var f=S.filter.toLowerCase();
 var items=(sorted||getSorted()).filter(function(l){
 if(!f)return true;
-return l.name.toLowerCase().indexOf(f)>=0||l.address.toLowerCase().indexOf(f)>=0||(l.contact||’’).toLowerCase().indexOf(f)>=0;
+return l.name.toLowerCase().indexOf(f)>=0||l.address.toLowerCase().indexOf(f)>=0||(l.contact||'').toLowerCase().indexOf(f)>=0;
 });
-if(!S.locs.length)return ‘<div class="empty"><div class="empty-ico">📍</div><div class="empty-ttl">No locations saved yet</div><div class="empty-sub">Go to <b>Manage Locations</b> to add your facilities and clients.</div></div>’;
-if(!items.length)return ‘<div class="empty"><div class="empty-ico">🔍</div><div class="empty-ttl">No matches</div><div class="empty-sub">Try a different search term.</div></div>’;
-var h=’’;
+if(!S.locs.length)return '<div class="empty"><div class="empty-ico">📍</div><div class="empty-ttl">No locations saved yet</div><div class="empty-sub">Go to <b>Manage Locations</b> to add your facilities and clients.</div></div>';
+if(!items.length)return '<div class="empty"><div class="empty-ico">🔍</div><div class="empty-ttl">No matches</div><div class="empty-sub">Try a different search term.</div></div>';
+var h='';
 items.forEach(function(loc){
 var s=SEL.has(loc.id);
-var vl=loc.lastVisit?‘Visited ‘+fmtDate(loc.lastVisit)+(loc.visitCount>1?’ · ‘+loc.visitCount+‘x’:’’):’’;
-h+=’<div class="stop-card'+(s?' sel':'')+(loc.priority?' pri':'')+'" onclick="togSel(\''+loc.id+'\')">’;
-h+=’<div class="chk">’+(s?’✓’:’’)+’</div>’;
-h+=’<div class="sbody"><div class="nm-row">’+(loc.priority?’<span>⭐</span>’:’’)+’<div class="snm">’+esc(loc.name)+’</div></div>’;
-h+=’<div class="sadr">’+esc(loc.address)+’</div>’;
-if(loc.contact)h+=’<div class="scnt">👤 ‘+esc(loc.contact)+’</div>’;
-if(loc.notes)h+=’<div class="snts">📋 ‘+esc(loc.notes)+’</div>’;
-h+=’<div class="smeta">’+tagH(loc.category)+dayH(loc.day);
-if(vl)h+=’<span class="svis">’+vl+’</span>’;
-h+=’</div></div>’;
-h+=’<div class="sacts">’;
+var vl=loc.lastVisit?'Visited '+fmtDate(loc.lastVisit)+(loc.visitCount>1?' · '+loc.visitCount+'x':''):'';
+h+='<div class="stop-card'+(s?' sel':'')+(loc.priority?' pri':'')+'" onclick="togSel(\''+loc.id+'\')">';
+h+='<div class="chk">'+(s?'✓':'')+'</div>';
+h+='<div class="sbody"><div class="nm-row">'+(loc.priority?'<span>⭐</span>':'')+'<div class="snm">'+esc(loc.name)+'</div></div>';
+h+='<div class="sadr">'+esc(loc.address)+'</div>';
+if(loc.contact)h+='<div class="scnt">👤 '+esc(loc.contact)+'</div>';
+if(loc.notes)h+='<div class="snts">📋 '+esc(loc.notes)+'</div>';
+h+='<div class="smeta">'+tagH(loc.category)+dayH(loc.day);
+if(vl)h+='<span class="svis">'+vl+'</span>';
+h+='</div></div>';
+h+='<div class="sacts">';
 if(loc.phone||loc.phone2){
-h+=’<div class="cbts">’;
-if(loc.phone){h+=’<a class="ibt" href="tel:'+cp(loc.phone)+'" onclick="event.stopPropagation()">📞</a><a class="ibt" href="sms:'+cp(loc.phone)+'" onclick="event.stopPropagation()">💬</a>’;}
-if(loc.phone2){h+=’<a class="ibt" href="tel:'+cp(loc.phone2)+'" onclick="event.stopPropagation()">📞₂</a><a class="ibt" href="sms:'+cp(loc.phone2)+'" onclick="event.stopPropagation()">💬₂</a>’;}
-h+=’</div>’;
+h+='<div class="cbts">';
+if(loc.phone){h+='<a class="ibt" href="tel:'+cp(loc.phone)+'" onclick="event.stopPropagation()">📞</a><a class="ibt" href="sms:'+cp(loc.phone)+'" onclick="event.stopPropagation()">💬</a>';}
+if(loc.phone2){h+='<a class="ibt" href="tel:'+cp(loc.phone2)+'" onclick="event.stopPropagation()">📞₂</a><a class="ibt" href="sms:'+cp(loc.phone2)+'" onclick="event.stopPropagation()">💬₂</a>';}
+h+='</div>';
 }
-h+=’</div></div>’;
+h+='</div></div>';
 });
 return h;
 }
@@ -365,54 +365,54 @@ function buildSavedList(sorted){
 var f=S.mfilter.toLowerCase();
 var items=(sorted||getSorted()).filter(function(l){
 if(!f)return true;
-return l.name.toLowerCase().indexOf(f)>=0||l.address.toLowerCase().indexOf(f)>=0||(l.contact||’’).toLowerCase().indexOf(f)>=0||(l.category||’’).toLowerCase().indexOf(f)>=0||(l.day||’’).toLowerCase().indexOf(f)>=0;
+return l.name.toLowerCase().indexOf(f)>=0||l.address.toLowerCase().indexOf(f)>=0||(l.contact||'').toLowerCase().indexOf(f)>=0||(l.category||'').toLowerCase().indexOf(f)>=0||(l.day||'').toLowerCase().indexOf(f)>=0;
 });
-if(!S.locs.length)return ‘<div class="empty"><div class="empty-ico">🏥</div><div class="empty-ttl">No locations yet</div><div class="empty-sub">Add your facilities, clients, and regular stops above.</div></div>’;
-if(!items.length&&S.mfilter)return ‘<div class="empty"><div class="empty-ico">🔍</div><div class="empty-ttl">No matches</div><div class="empty-sub">Try a different search term.</div></div>’;
-var h=’’;
+if(!S.locs.length)return '<div class="empty"><div class="empty-ico">🏥</div><div class="empty-ttl">No locations yet</div><div class="empty-sub">Add your facilities, clients, and regular stops above.</div></div>';
+if(!items.length&&S.mfilter)return '<div class="empty"><div class="empty-ico">🔍</div><div class="empty-ttl">No matches</div><div class="empty-sub">Try a different search term.</div></div>';
+var h='';
 items.forEach(function(loc,i){
-var vl=loc.lastVisit?’📅 Last: ‘+fmtDate(loc.lastVisit):’’;
-h+=’<div class="saved-card'+(loc.priority?' pc':'')+'"><div class="sc-top">’;
-h+=’<div class="sc-num">’+String(i+1).padStart(2,‘0’)+’</div>’;
-h+=’<div class="sc-info"><div class="sc-nmrow">’+(loc.priority?’<span>⭐</span>’:’’)+’<div class="sc-nm">’+esc(loc.name)+’</div></div>’;
-h+=’<div class="sc-adr">’+esc(loc.address)+’</div>’;
+var vl=loc.lastVisit?'📅 Last: '+fmtDate(loc.lastVisit):'';
+h+='<div class="saved-card'+(loc.priority?' pc':'')+'"><div class="sc-top">';
+h+='<div class="sc-num">'+String(i+1).padStart(2,'0')+'</div>';
+h+='<div class="sc-info"><div class="sc-nmrow">'+(loc.priority?'<span>⭐</span>':'')+'<div class="sc-nm">'+esc(loc.name)+'</div></div>';
+h+='<div class="sc-adr">'+esc(loc.address)+'</div>';
 if(loc.contact){
-h+=’<div class="sc-cnt">👤 ‘+esc(loc.contact);
-if(loc.phone)h+=’ · <a href="tel:'+cp(loc.phone)+'" style="color:#e8590c;text-decoration:none">📞</a> <a href="sms:'+cp(loc.phone)+'" style="color:#e8590c;text-decoration:none">💬</a> ‘+esc(loc.phone);
-if(loc.phone2)h+=’ · <a href="tel:'+cp(loc.phone2)+'" style="color:#e8590c;text-decoration:none">📞</a> <a href="sms:'+cp(loc.phone2)+'" style="color:#e8590c;text-decoration:none">💬</a> ‘+esc(loc.phone2);
-h+=’</div>’;
+h+='<div class="sc-cnt">👤 '+esc(loc.contact);
+if(loc.phone)h+=' · <a href="tel:'+cp(loc.phone)+'" style="color:#e8590c;text-decoration:none">📞</a> <a href="sms:'+cp(loc.phone)+'" style="color:#e8590c;text-decoration:none">💬</a> '+esc(loc.phone);
+if(loc.phone2)h+=' · <a href="tel:'+cp(loc.phone2)+'" style="color:#e8590c;text-decoration:none">📞</a> <a href="sms:'+cp(loc.phone2)+'" style="color:#e8590c;text-decoration:none">💬</a> '+esc(loc.phone2);
+h+='</div>';
 }
-if(loc.notes)h+=’<div class="sc-nts">📋 ‘+esc(loc.notes)+’</div>’;
-if(loc.day&&loc.day!==‘none’)h+=’<div style="margin-top:4px">’+dayH(loc.day)+’</div>’;
-h+=’</div>’;
-h+=’<div class="sc-btns">’+tagH(loc.category);
-h+=’<button class="edit-btn" onclick="openEdit(\''+loc.id+'\')">Edit</button>’;
-h+=’<button class="del-btn" onclick="doDelete(\''+loc.id+'\')">×</button></div></div>’;
-h+=’<div class="sc-foot">’;
-if(vl)h+=’<span class="vstat">’+vl+’</span>’;
-h+=’<span class="vstat">· ‘+(loc.visitCount||0)+’ visit’+((loc.visitCount||0)!==1?‘s’:’’)+’</span></div></div>’;
+if(loc.notes)h+='<div class="sc-nts">📋 '+esc(loc.notes)+'</div>';
+if(loc.day&&loc.day!=='none')h+='<div style="margin-top:4px">'+dayH(loc.day)+'</div>';
+h+='</div>';
+h+='<div class="sc-btns">'+tagH(loc.category);
+h+='<button class="edit-btn" onclick="openEdit(\''+loc.id+'\')">Edit</button>';
+h+='<button class="del-btn" onclick="doDelete(\''+loc.id+'\')">×</button></div></div>';
+h+='<div class="sc-foot">';
+if(vl)h+='<span class="vstat">'+vl+'</span>';
+h+='<span class="vstat">· '+(loc.visitCount||0)+' visit'+((loc.visitCount||0)!==1?'s':'')+'</span></div></div>';
 });
 return h;
 }
 
-function renderStopList(){var el=document.getElementById(‘stopList’);if(el)el.innerHTML=buildStopList();updateFab();}
-function renderSavedList(){var el=document.getElementById(‘savedList’);if(el)el.innerHTML=buildSavedList();}
+function renderStopList(){var el=document.getElementById('stopList');if(el)el.innerHTML=buildStopList();updateFab();}
+function renderSavedList(){var el=document.getElementById('savedList');if(el)el.innerHTML=buildSavedList();}
 function updateFab(){
-var f=document.getElementById(‘fab’);if(!f)return;
-f.className=‘fab’+(SEL.size===0?’ hidden’:’’);
-var b=f.querySelector(’.fab-badge’);if(b)b.textContent=SEL.size;
-var c=document.getElementById(‘selCount’);if(c)c.innerHTML=SEL.size+’ <span>stop’+(SEL.size!==1?‘s’:’’)+’</span>’;
+var f=document.getElementById('fab');if(!f)return;
+f.className='fab'+(SEL.size===0?' hidden':'');
+var b=f.querySelector('.fab-badge');if(b)b.textContent=SEL.size;
+var c=document.getElementById('selCount');if(c)c.innerHTML=SEL.size+' <span>stop'+(SEL.size!==1?'s':'')+'</span>';
 }
 function togSel(id){
 if(SEL.has(id))SEL.delete(id);else SEL.add(id);
 saveSel();
-var cards=document.querySelectorAll(’.stop-card’);
+var cards=document.querySelectorAll('.stop-card');
 cards.forEach(function(card){
-var oc=card.getAttribute(‘onclick’);
+var oc=card.getAttribute('onclick');
 if(oc&&oc.indexOf(id)>=0){
 var loc=S.locs.find(function(l){return l.id===id;});
-card.className=‘stop-card’+(SEL.has(id)?’ sel’:’’)+(loc&&loc.priority?’ pri’:’’);
-var chk=card.querySelector(’.chk’);if(chk)chk.innerHTML=SEL.has(id)?’✓’:’’;
+card.className='stop-card'+(SEL.has(id)?' sel':'')+(loc&&loc.priority?' pri':'');
+var chk=card.querySelector('.chk');if(chk)chk.innerHTML=SEL.has(id)?'✓':'';
 }
 });
 updateFab();
@@ -426,17 +426,17 @@ var stops=S.locs.filter(function(l){return SEL.has(l.id);});
 var enc=stops.map(function(l){return encodeURIComponent(l.address);});
 var all;
 if(S.startAddr)all=[encodeURIComponent(S.startAddr)].concat(enc);
-else if(lat&&lng)all=[lat+’,’+lng].concat(enc);
+else if(lat&&lng)all=[lat+','+lng].concat(enc);
 else all=enc.slice();
-window.location.href=‘googlechrome://maps.google.com/maps/dir/’+all.join(’/’);
-showToast(‘Opening ‘+stops.length+’ stop’+(stops.length>1?‘s’:’’)+’ in Maps’);
+window.location.href='googlechrome://maps.google.com/maps/dir/'+all.join('/');
+showToast('Opening '+stops.length+' stop'+(stops.length>1?'s':'')+' in Maps');
 if(stops.length>1){S.showTip=true;render();}
 }
 function launchRoute(){
 var stops=S.locs.filter(function(l){return SEL.has(l.id);});
 if(!stops.length)return;
 if(!S.startAddr&&navigator.geolocation){
-showToast(‘Getting your location…’);
+showToast('Getting your location...');
 navigator.geolocation.getCurrentPosition(
 function(p){buildAndLaunch(p.coords.latitude,p.coords.longitude);},
 function(){buildAndLaunch(null,null);},
@@ -446,55 +446,55 @@ function(){buildAndLaunch(null,null);},
 }
 
 async function doAdd(){
-if(!NF.name.trim()||!NF.address.trim()){showToast(‘Name and address required’,false);return;}
+if(!NF.name.trim()||!NF.address.trim()){showToast('Name and address required',false);return;}
 var loc=Object.assign({},NF,{id:String(Date.now()),visitCount:0,lastVisit:null});
 S.locs.push(loc);NF=blank();
-await saveSync();showToast(loc.name+’ added!’);
+await saveSync();showToast(loc.name+' added!');
 }
 async function doDelete(id){
-if(!confirm(‘Remove this location?’))return;
+if(!confirm('Remove this location?'))return;
 SEL.delete(id);
 S.locs=S.locs.filter(function(l){return l.id!==id;});
-await saveSync();showToast(‘Location removed’);
+await saveSync();showToast('Location removed');
 }
 function openEdit(id){
 var loc=S.locs.find(function(l){return l.id===id;});
 if(!loc)return;
 S.editId=id;
-EF=Object.assign({},blank(),loc,{day:loc.day||‘none’});
+EF=Object.assign({},blank(),loc,{day:loc.day||'none'});
 render();
 }
 function closeModal(){S.editId=null;render();}
 async function doSaveEdit(){
-if(!EF.name.trim()||!EF.address.trim()){showToast(‘Name and address required’,false);return;}
-S.locs=S.locs.map(function(l){return l.id===S.editId?Object.assign({},l,EF,{day:EF.day||‘none’}):l;});
+if(!EF.name.trim()||!EF.address.trim()){showToast('Name and address required',false);return;}
+S.locs=S.locs.map(function(l){return l.id===S.editId?Object.assign({},l,EF,{day:EF.day||'none'}):l;});
 var nm=EF.name;S.editId=null;
-await saveSync();showToast(nm+’ updated!’);
+await saveSync();showToast(nm+' updated!');
 }
 async function doConnect(){
-var ak=document.getElementById(‘akIn’),bi=document.getElementById(‘biIn’);
-var key=ak?ak.value.trim():’’,bid=bi?bi.value.trim():’’;
-if(!key){showToast(‘Please enter an API key’,false);return;}
-S.apiKey=key;localStorage.setItem(‘rg_apikey’,key);
-if(bid){S.binId=bid;localStorage.setItem(‘rg_binid’,bid);}
-showToast(‘Connecting…’);
+var ak=document.getElementById('akIn'),bi=document.getElementById('biIn');
+var key=ak?ak.value.trim():'',bid=bi?bi.value.trim():'';
+if(!key){showToast('Please enter an API key',false);return;}
+S.apiKey=key;localStorage.setItem('rg_apikey',key);
+if(bid){S.binId=bid;localStorage.setItem('rg_binid',bid);}
+showToast('Connecting...');
 var pulled=await pullCloud(true);
 if(!pulled)await pushCloud();
 render();
 }
 function doReset(){
-if(!confirm(‘Reset sync credentials? Your cloud data is NOT deleted.’))return;
-S.apiKey=’’;S.binId=’’;
-localStorage.removeItem(‘rg_apikey’);localStorage.removeItem(‘rg_binid’);
-setStatus(‘Not connected — enter API key above’);
-showToast(‘Credentials cleared’);render();
+if(!confirm('Reset sync credentials? Your cloud data is NOT deleted.'))return;
+S.apiKey='';S.binId='';
+localStorage.removeItem('rg_apikey');localStorage.removeItem('rg_binid');
+setStatus('Not connected - enter API key above');
+showToast('Credentials cleared');render();
 }
 function switchTab(t){S.tab=t;hideToast();render();}
 
 if(S.apiKey&&S.binId){pullCloud(true);}
-else if(!S.apiKey){S.syncMsg=‘Not connected — enter API key above’;}
-window.addEventListener(‘focus’,function(){hideToast();});
-document.addEventListener(‘visibilitychange’,function(){if(document.visibilityState===‘visible’)hideToast();});
+else if(!S.apiKey){S.syncMsg='Not connected - enter API key above';}
+window.addEventListener('focus',function(){hideToast();});
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')hideToast();});
 render();
 </script>
 
