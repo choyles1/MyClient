@@ -106,12 +106,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;ba
 
 <div class="form-group">
 <div class="form-label">Client Name *</div>
-<input type="text" class="input" id="editName" placeholder="Full Name">
+<input type="text" class="input" id="editName" placeholder="Full Name" oninput="this.value=capitalize(this.value)">
 </div>
 
 <div class="form-group">
-<div class="form-label">Address *</div>
-<input type="text" class="input" id="editAddress" placeholder="Street Address, City, State ZIP">
+<div class="form-label">Street Address *</div>
+<input type="text" class="input" id="editStreet" placeholder="Street Address" oninput="this.value=capitalize(this.value)">
+</div>
+
+<div class="form-group">
+<div class="form-label">City *</div>
+<input type="text" class="input" id="editCity" placeholder="City" oninput="this.value=capitalize(this.value)">
+</div>
+
+<div class="form-group">
+<div class="form-label">ZIP Code *</div>
+<input type="text" class="input" id="editZip" placeholder="ZIP Code" oninput="this.value=this.value.toUpperCase()">
 </div>
 
 <div class="form-group">
@@ -134,7 +144,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;ba
 
 <div class="form-group">
 <div class="form-label">Notes</div>
-<input type="text" class="input" id="editNotes" placeholder="Additional notes">
+<input type="text" class="input" id="editNotes" placeholder="Additional notes" oninput="this.value=capitalize(this.value)">
 </div>
 
 <button class="btn" onclick="saveClient()">Save Client</button>
@@ -342,7 +352,9 @@ function showAddForm() {
     editingId = null;
     document.getElementById('formTitle').textContent = 'Add New Client';
     document.getElementById('editName').value = '';
-    document.getElementById('editAddress').value = '';
+    document.getElementById('editStreet').value = '';
+    document.getElementById('editCity').value = '';
+    document.getElementById('editZip').value = '';
     document.getElementById('editNotes').value = '';
     document.getElementById('phoneList').innerHTML = '';
     addPhoneField();
@@ -362,7 +374,9 @@ function editClient(id) {
     editingId = id;
     document.getElementById('formTitle').textContent = 'Edit Client';
     document.getElementById('editName').value = client.name;
-    document.getElementById('editAddress').value = client.address;
+    document.getElementById('editStreet').value = client.street || '';
+    document.getElementById('editCity').value = client.city || '';
+    document.getElementById('editZip').value = client.zip || '';
     document.getElementById('editNotes').value = client.notes || '';
     
     document.getElementById('phoneList').innerHTML = '';
@@ -393,12 +407,14 @@ function cancelEdit() {
 }
 
 function saveClient() {
-    var name = capitalize(document.getElementById('editName').value.trim());
-    var address = capitalize(document.getElementById('editAddress').value.trim());
-    var notes = capitalize(document.getElementById('editNotes').value.trim());
+    var name = document.getElementById('editName').value.trim();
+    var street = document.getElementById('editStreet').value.trim();
+    var city = document.getElementById('editCity').value.trim();
+    var zip = document.getElementById('editZip').value.trim();
+    var notes = document.getElementById('editNotes').value.trim();
     
-    if (!name || !address) {
-        alert('Name and Address are required');
+    if (!name || !street || !city || !zip) {
+        alert('Name, Street, City, and ZIP are required');
         return;
     }
     
@@ -418,7 +434,10 @@ function saveClient() {
     var client = {
         id: editingId || Date.now(),
         name: name,
-        address: address,
+        street: street,
+        city: city,
+        zip: zip,
+        address: street + ', ' + city + ', ' + zip,
         phones: phones,
         days: days,
         notes: notes
@@ -542,7 +561,10 @@ function renderClients() {
         clients.forEach(function(c) {
             html += '<div class="client-item">';
             html += '<div class="client-name">' + esc(c.name) + '</div>';
-            html += '<div class="client-info">📍 ' + esc(c.address) + '</div>';
+            html += '<div class="client-info">📍 ' + esc(c.street || '') + '</div>';
+            if (c.city && c.zip) {
+                html += '<div class="client-info">' + esc(c.city) + ', ' + esc(c.zip) + '</div>';
+            }
             
             if (c.phones && c.phones.length > 0) {
                 html += '<div class="client-info">';
