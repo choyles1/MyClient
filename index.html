@@ -135,11 +135,11 @@ var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 var S={
-locs:JSON.parse(localStorage.getItem('rg_locs')||'[]'),
-selArr:JSON.parse(localStorage.getItem('rg_sel')||'[]'),
+locs:JSON.parse((function(){try{return localStorage.getItem('rg_locs')||'[]';}catch(e){return '[]';}})()),
+selArr:JSON.parse((function(){try{return localStorage.getItem('rg_sel')||'[]';}catch(e){return '[]';}})()),
 tab:'today',filter:'',mfilter:'',startAddr:'',showTip:false,editId:null,
-apiKey:localStorage.getItem('rg_apikey')||'',
-binId:localStorage.getItem('rg_binid')||'',
+apiKey:(function(){try{return localStorage.getItem('rg_apikey')||'';}catch(e){return '';}})(),
+binId:(function(){try{return localStorage.getItem('rg_binid')||'';}catch(e){return '';}})(),
 syncing:false,syncMsg:'',syncErr:false,
 toastMsg:'',toastOk:true,toastShow:false,toastTmr:null,
 akIn:'',biIn:''
@@ -149,8 +149,8 @@ var NF=blank();
 var EF=blank();
 
 function blank(){return{name:'',address:'',contact:'',phone:'',phone2:'',category:'facility',notes:'',priority:false,day:'none'};}
-function saveLocs(){localStorage.setItem('rg_locs',JSON.stringify(S.locs));}
-function saveSel(){localStorage.setItem('rg_sel',JSON.stringify([...SEL]));}
+function saveLocs(){try{localStorage.setItem('rg_locs',JSON.stringify(S.locs));}catch(e){}}
+function saveSel(){try{localStorage.setItem('rg_sel',JSON.stringify([...SEL]));}catch(e){}}
 function esc(s){return String(s||'').replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');}
 function cp(p){return p.replace(/\D/g,'');}
 function fmtPh(v){var d=v.replace(/\D/g,'').slice(0,10);if(d.length<=3)return d;if(d.length<=6)return '('+d.slice(0,3)+') '+d.slice(3);return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);}
@@ -475,8 +475,8 @@ async function doConnect(){
 var ak=document.getElementById('akIn'),bi=document.getElementById('biIn');
 var key=ak?ak.value.trim():'',bid=bi?bi.value.trim():'';
 if(!key){showToast('Please enter an API key',false);return;}
-S.apiKey=key;localStorage.setItem('rg_apikey',key);
-if(bid){S.binId=bid;localStorage.setItem('rg_binid',bid);}
+S.apiKey=key;try{localStorage.setItem('rg_apikey',key);}catch(e){}
+if(bid){S.binId=bid;try{localStorage.setItem('rg_binid',bid);}catch(e){}}
 showToast('Connecting...');
 var pulled=await pullCloud(true);
 if(!pulled)await pushCloud();
@@ -485,7 +485,7 @@ render();
 function doReset(){
 if(!confirm('Reset sync credentials? Your cloud data is NOT deleted.'))return;
 S.apiKey='';S.binId='';
-localStorage.removeItem('rg_apikey');localStorage.removeItem('rg_binid');
+try{localStorage.removeItem('rg_apikey');localStorage.removeItem('rg_binid');}catch(e){}
 setStatus('Not connected - enter API key above');
 showToast('Credentials cleared');render();
 }
