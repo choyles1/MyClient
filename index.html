@@ -461,27 +461,6 @@
             margin-bottom: 10px;
         }
 
-        .settings-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #667eea;
-            color: white;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 100;
-        }
-
-        .settings-btn:hover {
-            background: #5568d3;
-            transform: scale(1.1);
-        }
-
         @media (max-width: 768px) {
             .client-grid {
                 grid-template-columns: 1fr;
@@ -533,8 +512,6 @@
 
         <div id="clientGrid" class="client-grid"></div>
     </div>
-
-    <button class="settings-btn" onclick="openSettingsModal()">⚙️</button>
 
     <!-- Client Modal -->
     <div id="clientModal" class="modal">
@@ -660,7 +637,7 @@
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Settings</h2>
+                <h2>JSONBin Settings</h2>
                 <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
             </div>
             
@@ -1073,7 +1050,10 @@
             settings.jsonbinBinId = document.getElementById('jsonbinBinId').value;
             localStorage.setItem('clientManagerSettings', JSON.stringify(settings));
             closeSettingsModal();
-            alert('Settings saved!');
+            
+            if (settings.jsonbinKey && settings.jsonbinBinId) {
+                syncToCloud();
+            }
         }
 
         function openSettingsModal() {
@@ -1102,7 +1082,6 @@
 
         function syncData() {
             if (!settings.jsonbinKey || !settings.jsonbinBinId) {
-                alert('Please configure JSONBin settings first');
                 openSettingsModal();
                 return;
             }
